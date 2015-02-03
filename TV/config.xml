@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <widget>
-	<cpname itemtype="string"></cpname>
-	<cplogo itemtype="string"></cplogo>
-	<cpauthjs itemtype="string"></cpauthjs>
+	<cpname itemtype="string"/>
+	<cplogo itemtype="string"/>
+	<cpauthjs itemtype="string"/>
 	
 	<BigThumbIcon>icon/ic_115x95.png</BigThumbIcon>
 	<ThumbIcon>icon/ic_106x88.png</ThumbIcon>
@@ -15,25 +14,25 @@
 	<ListIconHD>icon/ic_128x105.png</ListIconHD>
 	<Icon1080>icon/ic_128x105.png</Icon1080>
 	
-	<category itemtype="string"></category>
+	<category itemtype="string">Lifestyle</category>
 	<autoUpdate itemtype="boolean">n</autoUpdate>
 	<ver itemtype="string">0.100</ver>
-	<mgrver itemtype="string"></mgrver>
-	<fullwidget itemtype="boolean">y</fullwidget>
+	<mgrver itemtype="string"/>
+	<fullwidget itemtype="boolean">n</fullwidget>
 	<type itemtype="string">user</type>
-	<srcctl itemtype="boolean">y</srcctl>
-	<ticker itemtype="boolean">n</ticker>
+	<srcctl itemtype="boolean">n</srcctl>
+	<ticker itemtype="boolean">y</ticker>
 	<childlock itemtype="boolean">n</childlock>
 	<videomute itemtype="boolean">n</videomute>
 	<dcont itemtype="boolean">y</dcont>
-	<widgetname itemtype="string">HandsFrame_High</widgetname>
-	<description itemtype="string"></description>
+	<widgetname itemtype="string">PT</widgetname>
+	<description itemtype="string"/>
 	<width itemtype="string">1280</width>
 	<height itemtype="string">720</height>
 	<author itemtype="group"> 
-		<name itemtype="string"></name>
-		<email itemtype="string"></email>
-		<link itemtype="string"></link>
-		<organization itemtype="string"></organization>
+		<name itemtype="string"/>
+		<email itemtype="string"/>
+		<link itemtype="string"/>
+		<organization itemtype="string"/>
 	</author>
 </widget>
