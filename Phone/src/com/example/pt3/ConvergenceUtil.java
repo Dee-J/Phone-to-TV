@@ -25,6 +25,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.json.JSONObject;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public class ConvergenceUtil {
@@ -32,12 +33,12 @@ public class ConvergenceUtil {
 	private final String TAG = "ConvergenceUtil";
 	private DefaultHttpClient httpClient;
 
-	private String ipAddress 	= "192.168.0.59";                       	// [반드시 입력해주세요] TV의 IP 주소
-	private String portNumber 	= "8080" ;			                   		// [반드시 입력해주세요] 실제TV는 80, 에뮬레이터는 8008
+//	private String ipAddress 	= "192.168.0.59";                       	// [반드시 입력해주세요] TV의 IP 주소
+//	private String portNumber 	= "8080" ;			                   		// [반드시 입력해주세요] 실제TV는 80, 에뮬레이터는 8008
 	private String appId 		= "js";         							// [반드시 입력해주세요] TV 애플리케이션의 ID 값
 	private String macAddress 	=""; 
 //			"BC:72:B1:D9:27:C5";			         	// [선택사항] 모바일 단말의 MAC 주소
-	
+	private String appURL;
 	public  final String RECEIVE = "com.example.pt3";
 	
 	/**
@@ -47,7 +48,11 @@ public class ConvergenceUtil {
 	public ConvergenceUtil() {
 		Log.i(TAG, "generator()");
 	}
-
+	public void setIpAddress(String appURL){
+		this.appURL=appURL;
+		Log.d("appURL",appURL);
+	}
+	
     public static DefaultHttpClient getThreadSafeClient()  {
 
         DefaultHttpClient client = new DefaultHttpClient();
@@ -65,7 +70,7 @@ public class ConvergenceUtil {
 	public int connect() {
 		Log.i(TAG, "connect()");
 		// URL 설정
-		String urlStr = "http://" + ipAddress + ":" + portNumber + "/ws/app/" + appId + "/connect";
+		String urlStr = appURL + appId + "/connect";
 		URL url = null;
 		int statusCode = -1;
         try {
@@ -93,8 +98,7 @@ public class ConvergenceUtil {
 		try {
 			// TV로 연결요청 (HttpResponse 객체 반환)
 			HttpResponse response = httpClient.execute((HttpUriRequest) message);
-			Log.i(TAG, "xx1x");
-
+	
             Log.i(TAG, "bbb");
                 // 응답코드 반환
                 statusCode = response.getStatusLine().getStatusCode();
@@ -127,7 +131,7 @@ public class ConvergenceUtil {
 	public void disconnect() {
 		Log.i(TAG, "disconnect()");
 		// URL 설정
-		String urlStr = "http://" + ipAddress + ":" + portNumber + "/ws/app/" +appId + "/disconnect";
+		String urlStr = appURL +appId + "/disconnect";
 		URL url = null;
 		try {
 			url = new URL(urlStr);
@@ -179,7 +183,7 @@ public class ConvergenceUtil {
 	public void sendMessage(JSONObject msg) {
 		Log.i(TAG, "sendMessage()"+msg);
 		// URL 설정
-            String urlStr = "http://" + ipAddress + ":" + portNumber + "/ws/app/"
+            String urlStr = appURL
                     + appId + "/queue";
             URL url = null;
             try {
@@ -253,7 +257,7 @@ public class ConvergenceUtil {
 
 
 		// URL 설정
-		String urlStr = "http://" + ipAddress + ":" + portNumber + "/ws/app/"
+		String urlStr = appURL
 				+ appId + "/queue/device/" + macAddress;
 		URL url = null;
 		try {

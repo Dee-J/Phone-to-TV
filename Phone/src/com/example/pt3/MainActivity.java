@@ -1,15 +1,32 @@
 package com.example.pt3;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import java.util.logging.Logger;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
+/**
+ * @author Christian Bauer
+ */
 public class MainActivity extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
+    private static Logger log = Logger.getLogger(MainActivity.class.getName());
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        setContentView(R.layout.activity_main);
+
+     
+    }
+
+    public void ButtonClicked(View V){
+    	
+    	startActivity(new Intent(this,BrowserActivity.class));
+    	
+    }
 }

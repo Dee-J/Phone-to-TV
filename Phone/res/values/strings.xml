@@ -2,7 +2,19 @@
 <resources>
 
     <string name="app_name">PT3</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">PT3</string>
     <string name="hello_world">Hello world!</string>
 
+    
+    <string name="search_lan">Search LAN</string>
+    <string name="toggle_debug_logging">Toggle debug logging</string>
+
+    <string name="searching_lan">Searching LAN for UPnP devices...</string>
+    <string name="enabling_debug_logging">Enabling debug logging...</string>
+    <string name="disabling_debug_logging">Disabling debug logging...</string>
+
+    <string name="registering_demo_device">Registering UPnP demo device...</string>
+    <string name="create_demo_failed">Creating of demo device failed, check the log!</string>
+    <string name="appURL">appURL</string>
+    
 </resources>

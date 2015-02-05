@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Notification;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -28,12 +29,17 @@ public class NLService extends NotificationListenerService {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 		.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-		
+
+		SharedPreferences prefs = getSharedPreferences("PrefName", MODE_PRIVATE);
+		String text = prefs.getString(getResources().getString(R.string.appURL), "");
+		mConvergenceUtil.setIpAddress(text);
+
 		new Thread( new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+
 				startConnectThread();
 				startReceiveThread();
 			}
@@ -44,7 +50,7 @@ public class NLService extends NotificationListenerService {
 
 	public void onDestroy() {
 		new Thread( new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -52,7 +58,7 @@ public class NLService extends NotificationListenerService {
 				stopReceiveThread();
 			}
 		}).start();
-		
+
 		super.onDestroy();
 
 	}
@@ -75,15 +81,15 @@ public class NLService extends NotificationListenerService {
 				final String applicationName = (String) (ai != null ? pm
 						.getApplicationLabel(ai) : "(unknown)");
 				Log.d("App Name", applicationName);
-				String str = null;
-				Log.d("Text", str = getText(sbn));
+				ArrayList<String> str =  getText(sbn);
+				Log.d("Text", str.get(0)+"  "+str.get(1));
 
 				JSONObject jobj = new JSONObject();
 
 				try {
 					jobj.put("opcode", "recvNoti");
-					jobj.put("title", "알림");
-					jobj.put("mesg", str);
+					jobj.put("title", str.get(0));
+					jobj.put("mesg",str.get(1));
 					jobj.put("nickname", "박범찬");
 					jobj.put("color", "#FF08AB");
 
@@ -91,7 +97,7 @@ public class NLService extends NotificationListenerService {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Log.d("text",str);
+				Log.d("text",str.toString());
 				synchronized(Rock){
 					mConvergenceUtil.sendMessage(jobj);
 				}
@@ -103,9 +109,9 @@ public class NLService extends NotificationListenerService {
 
 	}
 
-	private String getText(StatusBarNotification event) {
+	private ArrayList<String> getText(StatusBarNotification event) {
 
-		String result = "";
+		ArrayList<String> result = new ArrayList();
 		try {
 			Notification notification = event.getNotification();
 			RemoteViews views = notification.contentView;
@@ -136,7 +142,7 @@ public class NLService extends NotificationListenerService {
 					int cnt=1;
 					if (type != null && type == 10)
 					{
-						if(cnt>=1)result += value.toString();
+						if(cnt>=1)result.add( value.toString());
 						cnt++;
 					}
 				}
@@ -152,12 +158,12 @@ public class NLService extends NotificationListenerService {
 	 */
 	private class ConnectThread extends Thread {
 		boolean m_runFlag = true;
-		
+
 		public void setRunFlag(boolean bFlag)
 		{
 			m_runFlag = bFlag;
 		}
-		
+
 		@Override
 		public void run() {
 			while (m_runFlag) {
@@ -169,18 +175,18 @@ public class NLService extends NotificationListenerService {
 			super.run();			
 		}
 	}
-	
+
 	private void startConnectThread()
 	{
 		stopConnectThread();
 		mConnectThread	= new  ConnectThread();
-		
+
 		if(null!=mConnectThread)
 		{
 			mConnectThread.start();
 		}
 	}
-	
+
 	private void stopConnectThread()
 	{
 		if(null!=mConnectThread)
@@ -191,19 +197,19 @@ public class NLService extends NotificationListenerService {
 			tmpThread.interrupt();
 		}
 	}
-	
+
 	/**
 	 * TV로 부터의 메시지를 수신하기 위한 thread
 	 */	
 	private class ReceiveThread extends Thread
 	{	
 		boolean m_runFlag = true;
-		
+
 		public void setRunFlag(boolean bFlag)
 		{
 			m_runFlag = bFlag;
 		}
-		
+
 		public void run()
 		{
 			while(m_runFlag)
@@ -217,14 +223,14 @@ public class NLService extends NotificationListenerService {
 			}
 		}
 	}
-	
+
 	private void startReceiveThread()
 	{
 		stopReceiveThread();
 		mReceiveThread = new ReceiveThread();
-        mReceiveThread.start();
+		mReceiveThread.start();
 	}
-	
+
 	private void stopReceiveThread()
 	{
 		if(null!=mReceiveThread)
