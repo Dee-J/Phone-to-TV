@@ -17,22 +17,33 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class NLService extends NotificationListenerService {
+public class MyListenerService extends NotificationListenerService {
 
-	private ConvergenceUtil mConvergenceUtil=new ConvergenceUtil();
+	private ConvergenceUtil mConvergenceUtil;
 	private ConnectThread mConnectThread;
 	private ReceiveThread mReceiveThread;
+	JSONObject obj = new JSONObject();
+
 	Object Rock =new Object();
 	public void onCreate() {
 		super.onCreate();
+		mConvergenceUtil=new ConvergenceUtil();
 
+		SharedPreferences prefs = getSharedPreferences("PrefName", MODE_PRIVATE);
+		String text=	prefs.getString(getResources().getString(R.string.appURL), "");
+		Log.d("Extracted-URL",text);
+		prefs.edit().clear();
+		mConvergenceUtil.setIpAddress(text);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 		.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		SharedPreferences prefs = getSharedPreferences("PrefName", MODE_PRIVATE);
-		String text = prefs.getString(getResources().getString(R.string.appURL), "");
-		mConvergenceUtil.setIpAddress(text);
+		try {
+			obj.put("opcode", "hello");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		new Thread( new Runnable() {
 
@@ -42,6 +53,20 @@ public class NLService extends NotificationListenerService {
 
 				startConnectThread();
 				startReceiveThread();
+				sendHello();
+			}
+
+			private void sendHello() {
+				// TODO Auto-generated method stub
+				try {
+					Thread.sleep(5000);
+					while(true) {mConvergenceUtil.sendMessage(obj);Thread.sleep(5000);}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
 			}
 		}).start();
 		Log.i("created", "NLService");
@@ -111,7 +136,7 @@ public class NLService extends NotificationListenerService {
 
 	private ArrayList<String> getText(StatusBarNotification event) {
 
-		ArrayList<String> result = new ArrayList();
+		ArrayList<String> result = new ArrayList<String>();
 		try {
 			Notification notification = event.getNotification();
 			RemoteViews views = notification.contentView;

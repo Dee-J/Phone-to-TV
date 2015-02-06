@@ -33,12 +33,10 @@ public class ConvergenceUtil {
 	private final String TAG = "ConvergenceUtil";
 	private DefaultHttpClient httpClient;
 
-//	private String ipAddress 	= "192.168.0.59";                       	// [반드시 입력해주세요] TV의 IP 주소
-//	private String portNumber 	= "8080" ;			                   		// [반드시 입력해주세요] 실제TV는 80, 에뮬레이터는 8008
-	private String appId 		= "js";         							// [반드시 입력해주세요] TV 애플리케이션의 ID 값
-	private String macAddress 	=""; 
-//			"BC:72:B1:D9:27:C5";			         	// [선택사항] 모바일 단말의 MAC 주소
-	private String appURL;
+		                   		// [반드시 입력해주세요] 실제TV는 80, 에뮬레이터는 8008
+	private String appId 		= "qq";         							// [반드시 입력해주세요] TV 애플리케이션의 ID 값
+	private String macAddress 	=			"BC:72:B1:D9:27:C5";			         	// [선택사항] 모바일 단말의 MAC 주소
+	private String appURL="";
 	public  final String RECEIVE = "com.example.pt3";
 	
 	/**
@@ -48,6 +46,7 @@ public class ConvergenceUtil {
 	public ConvergenceUtil() {
 		Log.i(TAG, "generator()");
 	}
+	
 	public void setIpAddress(String appURL){
 		this.appURL=appURL;
 		Log.d("appURL",appURL);
@@ -71,6 +70,8 @@ public class ConvergenceUtil {
 		Log.i(TAG, "connect()");
 		// URL 설정
 		String urlStr = appURL + appId + "/connect";
+		Log.d("appURL",appURL);
+
 		URL url = null;
 		int statusCode = -1;
         try {
@@ -252,9 +253,7 @@ public class ConvergenceUtil {
 	 */
 	public void receiveMessage() {
 		HttpResponse response = null;
-		String type = "";
-		String msg = "";
-
+	
 
 		// URL 설정
 		String urlStr = appURL
@@ -322,5 +321,4 @@ public class ConvergenceUtil {
 			e.printStackTrace();
 		}
 	}
-
 }

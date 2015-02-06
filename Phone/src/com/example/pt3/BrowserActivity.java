@@ -106,13 +106,6 @@ public class BrowserActivity extends ListActivity{
 
 	}
 
-	protected void searchNetwork() {
-		if (upnpService == null) return;
-		Toast.makeText(this, R.string.searching_lan, Toast.LENGTH_SHORT).show();
-		upnpService.getRegistry().removeAllRemoteDevices();
-		upnpService.getControlPoint().search();
-	}
-
 
 	protected class BrowseRegistryListener extends DefaultRegistryListener {
 
@@ -243,12 +236,13 @@ public class BrowserActivity extends ListActivity{
 
 	public void httpGetConnection(final String target){
 
-		new Thread(new Runnable() {
+
+		Thread t= new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				DefaultHttpClient httpclient = getThreadSafeClient();
+				DefaultHttpClient httpclient = new DefaultHttpClient();
 				HttpGet httpget= new HttpGet(target);
 
 				try {
@@ -258,12 +252,17 @@ public class BrowserActivity extends ListActivity{
 							String appurl=null;
 							for(Header h: responsebody.getAllHeaders())
 								if(h.getName().equals("Application-URL")){appurl=h.getValue();break;}
-
+							Log.d("setURL",appurl!=null?appurl:"null");
+							if(appurl==null) return;
 							SharedPreferences prefs = getSharedPreferences("PrefName", MODE_PRIVATE);
 							SharedPreferences.Editor editor = prefs.edit();
 							editor.putString(getResources().getString(R.string.appURL), appurl);
 							editor.commit();
-							startService(new Intent(getApplicationContext(),NLService.class));
+//							getApplicationContext().unbindService(serviceConnection);
+//							upnpService.getRegistry().removeListener(registryListener);
+//							
+							startService(new Intent(getApplicationContext(),MyListenerService.class));
+							Log.d("","try-to-startService");
 						}
 					}).start();
 				} catch (ClientProtocolException e) {
@@ -276,7 +275,8 @@ public class BrowserActivity extends ListActivity{
 
 
 			}
-		}).start();
+		});
+		t.start();
 
 
 	}       
