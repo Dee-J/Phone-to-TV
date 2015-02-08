@@ -20,23 +20,24 @@ import org.teleal.cling.model.meta.RemoteDeviceIdentity;
 import org.teleal.cling.registry.DefaultRegistryListener;
 import org.teleal.cling.registry.Registry;
 
-import android.app.ListActivity;
+import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class BrowserActivity extends ListActivity {
+public class BrowserActivity extends Fragment  {
 
 
 	private ArrayAdapter<DeviceDisplay> deviceListAdapter;
@@ -66,19 +67,34 @@ public class BrowserActivity extends ListActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		deviceListAdapter = new ArrayAdapter<DeviceDisplay>(this,android.R.layout.simple_list_item_1);
-		listview = getListView();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
+		View view=inflater.inflate(R.layout.activity_browser, container, false);
+		listview =(ListView)view.findViewById(R.id.list);
+			
+		deviceListAdapter = new ArrayAdapter<DeviceDisplay>(getActivity(),android.R.layout.simple_list_item_1);
+	
 		switchToDeviceList();
 
-		getApplicationContext().bindService(
-				new Intent(this, BrowserUpnpService.class), serviceConnection,
+		getActivity().bindService(
+				new Intent(getActivity(), BrowserUpnpService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
+		
+		return view;
 
 	}
 
+	  @Override
+	    public void onAttach(Activity activity) {
+	        super.onAttach(activity);
+	 	    }
+	  
+	  
 	public void switchToDeviceList() {
-		setListAdapter(deviceListAdapter);
+		listview.setAdapter(deviceListAdapter);
 
 		/*
 		 * Executes when the user (long) clicks on a device:
@@ -93,7 +109,7 @@ public class BrowserActivity extends ListActivity {
 				String targeturlstr = "http://" + targeturl.getHost() + ":"
 						+ targeturl.getPort() + targeturl.getPath();
 
-				Toast.makeText(getApplicationContext(), targeturlstr,
+				Toast.makeText(getActivity(), targeturlstr,
 						Toast.LENGTH_SHORT).show();
 
 				httpGetConnection(targeturlstr);			
@@ -104,7 +120,7 @@ public class BrowserActivity extends ListActivity {
 
 	public void onDestroy() {
 		super.onDestroy();
-		finish();
+
 
 
 	}
@@ -121,10 +137,10 @@ public class BrowserActivity extends ListActivity {
 		@Override
 		public void remoteDeviceDiscoveryFailed(Registry registry,
 				final RemoteDevice device, final Exception ex) {
-			runOnUiThread(new Runnable() {
+			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
 					Toast.makeText(
-							BrowserActivity.this,
+							getActivity(),
 							"Discovery failed of '"
 									+ device.getDisplayString()
 									+ "': "
@@ -163,7 +179,7 @@ public class BrowserActivity extends ListActivity {
 
 		public void deviceAdded(final Device device) {
 
-			runOnUiThread(new Runnable() {
+			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
 					DeviceDisplay d = new DeviceDisplay(device);
 
@@ -185,7 +201,7 @@ public class BrowserActivity extends ListActivity {
 		}
 
 		public void deviceRemoved(final Device device) {
-			runOnUiThread(new Runnable() {
+			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
 					deviceListAdapter.remove(new DeviceDisplay(device));
 				}
@@ -276,7 +292,7 @@ public class BrowserActivity extends ListActivity {
 								return;
 
 							mConvergenceUtil.setIpAddress(appurl);
-							getApplicationContext().unbindService(serviceConnection);
+							getActivity().unbindService(serviceConnection);
 							upnpService.getRegistry().removeListener(registryListener);
 //							SharedPreferences pref = getSharedPreferences("MySettings", MODE_PRIVATE);
 //							Editor editor =pref.edit();
