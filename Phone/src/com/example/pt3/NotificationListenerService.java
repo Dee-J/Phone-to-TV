@@ -7,9 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Notification;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -40,9 +41,18 @@ public class NotificationListenerService extends android.service.notification.No
 		Log.d("get text ",str.toString());
 
 		JSONObject jobj = new JSONObject();
-
+		final PackageManager pm = getApplicationContext().getPackageManager();
+		ApplicationInfo ai;
 		try {
-			jobj.put("opcode", "recvNoti");
+			ai = pm.getApplicationInfo(sbn.getPackageName(), 0);
+		} catch (final NameNotFoundException e) {
+			ai = null;
+		}
+		final String applicationName = (String) (ai != null ? pm
+				.getApplicationLabel(ai) : "(unknown)");
+		Log.d("App Name", applicationName);
+		try {
+			jobj.put("opcode", applicationName);
 			jobj.put("title", str.get(0));
 			jobj.put("mesg", str.get(1));
 			jobj.put("nickname", "¹Ú¹üÂù");

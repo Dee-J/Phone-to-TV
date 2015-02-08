@@ -36,6 +36,7 @@ public final class R {
         public static final int activity_page1=0x7f030002;
         public static final int activity_page2=0x7f030003;
         public static final int activity_page3=0x7f030004;
+        public static final int textstyle=0x7f030005;
     }
     public static final class string {
         public static final int appURL=0x7f04000a;

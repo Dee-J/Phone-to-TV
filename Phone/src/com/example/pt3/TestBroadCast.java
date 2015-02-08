@@ -23,6 +23,7 @@ public class TestBroadCast extends BroadcastReceiver{
 	static Object Rock = new Object();
 	Thread t=null;
 	@Override
+	
 	public void onReceive(final Context context, Intent intent) {
 		// TODO Auto-generated method stub
 		final Intent fintent = intent;

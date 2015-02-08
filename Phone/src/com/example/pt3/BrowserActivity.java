@@ -75,7 +75,7 @@ public class BrowserActivity extends Fragment  {
 		View view=inflater.inflate(R.layout.activity_browser, container, false);
 		listview =(ListView)view.findViewById(R.id.list);
 			
-		deviceListAdapter = new ArrayAdapter<DeviceDisplay>(getActivity(),android.R.layout.simple_list_item_1);
+		deviceListAdapter = new ArrayAdapter<DeviceDisplay>(getActivity(),R.layout.textstyle);
 	
 		switchToDeviceList();
 
