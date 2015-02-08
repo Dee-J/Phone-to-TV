@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
          android:id="@android:id/tabhost"
          android:layout_width="fill_parent"
          android:layout_height="fill_parent"
       >
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:padding="5dp">
 
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#88FFFF00" >
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:padding="5dp" >
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="103dp"
-                android:layout_height="wrap_content"
-                android:onClick="ButtonClicked"
-                android:text="Button" />
+        <Button
+            android:id="@+id/btn_setting_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="84dp"
+            android:text="Notification Setting" />
 
-        </FrameLayout>
+        <Button
+            android:id="@+id/btn_find_Device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_setting_notification"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            android:text="Find Device" />
 
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

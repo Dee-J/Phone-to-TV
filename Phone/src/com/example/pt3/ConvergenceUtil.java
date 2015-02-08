@@ -33,26 +33,29 @@ public class ConvergenceUtil {
 	private final String TAG = "ConvergenceUtil";
 	private DefaultHttpClient httpClient;
 
-		                   		// [반드시 입력해주세요] 실제TV는 80, 에뮬레이터는 8008
-	private String appId 		= "qq";         							// [반드시 입력해주세요] TV 애플리케이션의 ID 값
-	private String macAddress 	=			"BC:72:B1:D9:27:C5";			         	// [선택사항] 모바일 단말의 MAC 주소
+		                   		
+	private String appId 		= "js";         						
+	private String macAddress 	=			"BC:72:B1:D9:27:C5";			    
 	private String appURL="";
-	public  final String RECEIVE = "com.example.pt3";
-	
+	public  final String RECEIVE = "com.shakej.example.notification.listener.service";
+	private static ConvergenceUtil convergenceutil= null;
 	/**
 	 * 생성자
 	 * @param context
 	 */
-	public ConvergenceUtil() {
+	private ConvergenceUtil() {
 		Log.i(TAG, "generator()");
 	}
-	
-	public void setIpAddress(String appURL){
+	 
+	public static ConvergenceUtil getInstance(){
+		 return (convergenceutil==null)?convergenceutil= new ConvergenceUtil():convergenceutil;
+	}
+	public synchronized void setIpAddress(String appURL){
 		this.appURL=appURL;
 		Log.d("appURL",appURL);
 	}
 	
-    public static DefaultHttpClient getThreadSafeClient()  {
+    public  DefaultHttpClient getThreadSafeClient()  {
 
         DefaultHttpClient client = new DefaultHttpClient();
         ClientConnectionManager mgr = client.getConnectionManager();
@@ -66,7 +69,8 @@ public class ConvergenceUtil {
 	 * TV와 연결 함수 
 	 * @return
 	 */
-	public int connect() {
+	public  int connect() {
+		
 		Log.i(TAG, "connect()");
 		// URL 설정
 		String urlStr = appURL + appId + "/connect";
@@ -77,6 +81,7 @@ public class ConvergenceUtil {
         try {
 			url = new URL(urlStr);
 		} catch (MalformedURLException e) {
+			Log.e("람딩이는 다이스키하다", urlStr);
 			e.printStackTrace();
 		}
 
@@ -129,7 +134,7 @@ public class ConvergenceUtil {
 	/**
 	 * TV와의 연결 끊는 함수 
 	 */
-	public void disconnect() {
+	public  void disconnect() {
 		Log.i(TAG, "disconnect()");
 		// URL 설정
 		String urlStr = appURL +appId + "/disconnect";
@@ -181,7 +186,7 @@ public class ConvergenceUtil {
 	 * @param type	TV와 규약한 타입 값 
 	 * @param msg	TV와 규약한 메시지 값 
 	 */
-	public void sendMessage(JSONObject msg) {
+	public  void sendMessage(JSONObject msg) {
 		Log.i(TAG, "sendMessage()"+msg);
 		// URL 설정
             String urlStr = appURL
@@ -251,7 +256,7 @@ public class ConvergenceUtil {
 	/**
 	 * TV로 부터 메시지 수신 
 	 */
-	public void receiveMessage() {
+	public  void receiveMessage() {
 		HttpResponse response = null;
 	
 
@@ -299,26 +304,20 @@ public class ConvergenceUtil {
 
 	                	Log.d("recvtest",responseBody.toString());
 					}
-					
-					//String 으로 변환된 메시지의 type, msg값을 JSON객체를 이용해 각각 반환
-//					JSONObject jsonObj;
-//					try {
-//						jsonObj = new JSONObject(responseBody);
-//						if (jsonObj != null) {
-//							type = jsonObj.getString("type");
-//							msg = jsonObj.getString("msg");
-//						}
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
-				}
+									}
 
 				
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			Thread.currentThread().interrupt();
+			return;
 		} catch (IOException e) {
 			e.printStackTrace();
+			Thread.currentThread().interrupt();
+			
+				
+			return;
 		}
 	}
 }
