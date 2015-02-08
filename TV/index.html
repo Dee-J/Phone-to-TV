@@ -2,101 +2,125 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>.</title>
+		<title>q</title>
 
 		<!-- TODO : Style sheets code -->
 		<link rel="stylesheet" href="app/stylesheets/Main.css" type="text/css">
 
 		<!-- TODO: Plugins -->
-		
+   		<script src="$CAPH/1.0.0/caph-level1-unified.min.js"></script>
+		<object id='pluginObjectScreen' border='0' classid='clsid:SAMSUNG-INFOLINK-SCREEN' style='width: 0; height: 0; opacity: 0;'></object>
+		<object id='pluginObjectNNAVI' border='0' classid='clsid:SAMSUNG-INFOLINK-NNAVI' style='opacity:0.0; width:0px; height:0px;'></object>
+
 		
 		<!-- User Settings -->
-		<link rel="stylesheet" type="text/css" href="./assets/css/theme.css" />
-		<script type="text/javascript" src="./assets/js/jquery-2.1.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="app/stylesheets/theme.css" />
+		<script type="text/javascript" src="app/javascript/jquery-2.1.3.min.js"></script>
 	</head>
 
 	<body onload="Main.onLoad();" onunload="Main.onUnload();">
-	
-		<div id="dropdown_1" style="position: absolute; display: none; margin: 0 auto;">
-			<table border="1">
+		<div id="history" style="display: none;">
+			<table border="1" style="width: 1200px; margin: 0 auto; table-layout:fixed;">
 				<tr>
-					<th colspan="2">
-						알림 타입
+					<th colspan="3">
+						알림 기록
 					</th>
 				</tr>
+			</table>
+			<table border="1" style="width: 1200px; padding: 0px; margin: 0 auto; table-layout:fixed;">
 				<tr>
-					<td colspan="2" id="dropdown_1_1">자막형 알림</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_1_2">메일함형 알림</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_1_3">카드형 알림</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_1_4">아이콘형 알림</td>
+					<td id="historyT" style="width: 15%;">수신 시간</td>
+					<td id="historyV" style="width: 15%;">알림 종류</td>
+					<td id="historyN" style="width: 15%;">사용자명</td>
+					<td id="historyM" style="width: 25%">제목</td>
+					<td id="historyI" style="width: 30%;">내용</td>
 				</tr>
 			</table>
+			<div id="historyTableDiv" style="width: 1200px; overflow: scroll; margin: 0 auto; padding: 0px; border: 0px;">
+				<table id="historyTable" border="1" style="overflow: auto; width: 1200px; margin: 0px; padding: 0px; top-margin: -3px; table-layout:fixed;">
+				</table>
+			</div>
 		</div>
-		<div id="dropdown_2" style="position: absolute; display: none; margin: 0 auto;">
-			<table border="1">
-				<tr>
-					<th colspan="2">
-						알림창 크기
-					</th>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_2_1">최대 크기</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_2_2">중간 크기</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_2_3">작은 크기</td>
-				</tr>
-			</table>
-		</div>
-		<div id="dropdown_3" style="position: absolute; display: none; margin: 0 auto;">
-			<table border="1">
-				<tr>
-					<th colspan="2">
-						알림창 위치
-					</th>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_3_1">상단</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_3_2">중단</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_3_3">하단</td>
-				</tr>
-			</table>
-		</div>
-		<div id="dropdown_4" style="position: absolute; display: none; margin: 0 auto;">
-			<table border="1">
-				<tr>
-					<th colspan="2">
-						알림창 유지 시간
-					</th>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_4_1">3초</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_4_2">4초</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_4_3">5초</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="dropdown_4_4">6초</td>
-				</tr>
-			</table>
-		</div>
-		
-		<div id="dropdown_5" style="position: absolute; display: none; margin: 0 auto;">
+		<div id="dropper">
+			<div id="dropdown_1" style="position: absolute; display: none; margin: 0 auto;">
+				<table border="1">
+					<tr>
+						<th colspan="2">
+							알림 타입
+						</th>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_1_1">자막형 알림</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_1_2">메일함형 알림</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_1_3">카드형 알림</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_1_4">아이콘형 알림</td>
+					</tr>
+				</table>
+			</div>
+			<div id="dropdown_2" style="position: absolute; display: none; margin: 0 auto;">
+				<table border="1">
+					<tr>
+						<th colspan="2">
+							알림창 크기
+						</th>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_2_1">최대 크기</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_2_2">중간 크기</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_2_3">작은 크기</td>
+					</tr>
+				</table>
+			</div>
+			<div id="dropdown_3" style="position: absolute; display: none; margin: 0 auto;">
+				<table border="1">
+					<tr>
+						<th colspan="2">
+							알림창 위치
+						</th>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_3_1">상단</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_3_2">중단</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_3_3">하단</td>
+					</tr>
+				</table>
+			</div>
+			<div id="dropdown_4" style="position: absolute; display: none; margin: 0 auto;">
+				<table border="1">
+					<tr>
+						<th colspan="2">
+							알림창 유지 시간
+						</th>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_4_1">3초</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_4_2">4초</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_4_3">5초</td>
+					</tr>
+					<tr>
+						<td colspan="2" id="dropdown_4_4">6초</td>
+					</tr>
+				</table>
+			</div>
+			<div id="dropdown_5" style="position: absolute; display: none; margin: 0 auto;">
 			<table border="1">
 				<tr>
 					<th colspan="2">
@@ -111,44 +135,46 @@
 				</tr>
 			</table>
 		</div>
-		<center style="margin-top: 100px;">
-			<a href="javascript:void(0);" id="anchor" onkeydown="Main.keyDown();">
-			
-			<table border="1">
-			<tr>
-				<th colspan="2">
-					사용자 설정 메뉴
-				</th>
-			</tr>
-			<!-- 메뉴 시작 -->
-			<tr>
-				<td>알림 타입</td>
-				<td id="usr_1">
-				</td>
-			</tr>
-			<tr>
-				<td>알림 창 크기</td>
-				<td id="usr_2">
-				</td>
-			</tr>
-			<tr>
-				<td>알림 창 위치</td>
-				<td id="usr_3">
-				</td>
-			</tr>
-			<tr>
-				<td>알림 창 유지 시간</td>
-				<td id="usr_4">
-				</td>
-			</tr>
-			<tr>
-				<td>알림 서비스 중지</td>
-				<td id="usr_5">
-				</td>
-			</tr>
-			</table>
-			</a>
-		</center>
+		</div>
+		<div id="settingPanel">
+			<center style="margin-top: 100px;">
+				<a href="javascript:void(0);" id="anchor" onkeydown="Main.keyDown();">
+				
+				<table border="1">
+				<tr>
+					<th colspan="2">
+						사용자 설정 메뉴
+					</th>
+				</tr>
+				<tr>
+					<td>알림 타입</td>
+					<td id="usr_1">
+					</td>
+				</tr>
+				<tr>
+					<td>알림 창 크기</td>
+					<td id="usr_2">
+					</td>
+				</tr>
+				<tr>
+					<td>알림 창 위치</td>
+					<td id="usr_3">
+					</td>
+				</tr>
+				<tr>
+					<td>알림 창 유지 시간</td>
+					<td id="usr_4">
+					</td>
+				</tr>
+				<tr>
+					<td>알림 서비스 중지</td>
+					<td id="usr_5">
+					</td>
+				</tr>
+				</table>
+				</a>
+			</center>
+		</div>
 	</body>
 	
 	<!-- TODO : Common API -->
@@ -163,7 +189,6 @@
 	
 	<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/jquery.js'></script>
 	<script type="text/javascript" language="javascript" src="$MANAGER_WIDGET/Common/webapi/1.0/webapis.js"></script>
-
 	<!-- TODO : Javascript code -->
 	<script language="javascript" type="text/javascript" src="app/javascript/GetPath.js"></script>
 	<script language="javascript" type="text/javascript" src="app/javascript/Main.js"></script>

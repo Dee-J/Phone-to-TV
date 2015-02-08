@@ -1,6 +1,5 @@
 var elem = 0;
 var tvKey = new Common.API.TVKeyValue();
-
 var widgetAPI = new Common.API.Widget();
 
 var Main = {
@@ -9,19 +8,32 @@ var Main = {
 	},
 };
 
+var History;
+
 //IME 오브젝트 선언
 var oIME = null;
-var keyDownMaster = 'userSetting';
+var userSettingKeyMaster = 'userSetting';
 var dropdown = 0;
 var subMenu = 0;
 var elementNum = Array(0, 4, 3, 3, 4, 2);
 Main.onLoad = function()
 {
+	$('#key').html(curWidget.id);
 	//this.focus();	// 초기 포커스 설정
 	widgetAPI.sendReadyEvent();
 	//Main.loadContent();	//현재 카테고리에 해당하는 View 콘텐츠 로드
 	Main.enableKeys();
-	Main.keyInit();
+	Usersetting.keyInit();
+	History.Init();
+};
+
+History.Init = function(){
+	this.mesgq = new Array();	
+};
+
+
+var Usersetting = {
+		
 };
 
 var fileSystemObj = new FileSystem();
@@ -50,7 +62,7 @@ var write = function(val){
 	var jsFileObj;
 	jsFileObj = fileSystemObj.openCommonFile(path, 'w');
 	if(jsFileObj){
-		alert('write gogo...');
+		alert('write go...');
 	}else{
 		alert('write fail...');
 	}
@@ -58,7 +70,7 @@ var write = function(val){
 	fileSystemObj.closeFile(jsFileObj);
 };
 
-Main.keyInit = function(){
+Usersetting.keyInit = function(){
 	load();
 	if(read() == false){
 		alert('file not found');
@@ -71,13 +83,114 @@ Main.keyInit = function(){
 	$('#usr_2').text(res[1]);
 	$('#usr_3').text(res[2]);
 	$('#usr_4').text(res[3]);
-	$('#usr_5').text(res[4]);
-}
+	//$('#usr_5').text(res[4]);
+	$('#usr_5').text(curWidget.id);
+	$('#settingPanel').hide();
+};
+
+var keyDownMaster = 'outter';
+var tmp = 0;
 
 Main.keyDown = function(){
-		var keyCode = event.keyCode;
-		alert('catch');
-		switch(keyDownMaster){
+	var keyCode = event.keyCode;
+	alert(keyCode + 'key 입력댐');
+	var pluginObjectNNAVI = document.getElementById('pluginObjectNNAVI');
+	var DUID;
+	DUID = pluginObjectNNAVI.GetHWAddr();
+	$('#historyT').html(DUID);
+	alert("디바이스 UID? : " + DUID);
+	$('#key').html(keyCode);
+	switch(keyDownMaster){
+	case 'outter':
+		outterKeyDown(keyCode);
+		break;
+	case 'userSetting': 
+	case 'inDropdown':
+		userSettingKeyDown(keyCode);
+		break;
+	case 'history':
+		historyKeyDown(keyCode);
+		break;
+	}
+	switch(keyCode){
+	case tvKey.KEY_RETURN:
+		event.preventDefault();
+		//widgetAPI.blockNavigation(event);
+		break;
+	}
+};
+
+function historyKeyDown(key){
+	alert(key);
+	switch(key){
+    case tvKey.KEY_RETURN:
+		$("#history").slideUp();
+		keyDownMaster = 'outter';
+		break;
+    case tvKey.KEY_DOWN:
+		$('#perScroll_' + tmp + '1').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '2').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '3').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '4').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '5').removeClass('box_shadow');
+		tmp += 1;
+		if(tmp == History.mesgq.length)
+			tmp = 0;
+    	$('#historyTableDiv').scrollTop(tmp * 77);
+    	$('#perScroll_' + tmp + '1').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '2').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '3').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '4').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '5').addClass('box_shadow');
+		break;
+    case tvKey.KEY_UP:
+    	if(tmp == 0)
+    		tmp = History.mesgq.length;
+		$('#perScroll_' + tmp + '1').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '2').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '3').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '4').removeClass('box_shadow');
+		$('#perScroll_' + tmp + '5').removeClass('box_shadow');
+		tmp -= 1;
+    	$('#historyTableDiv').scrollTop(tmp * 77);
+    	$('#perScroll_' + tmp + '1').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '2').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '3').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '4').addClass('box_shadow');
+    	$('#perScroll_' + tmp + '5').addClass('box_shadow');
+		if(tmp == -1)
+			tmp = History.mesgq.length;
+		break;	
+	}
+	
+	
+
+	switch(key){
+	case tvKey.KEY_RETURN:
+		event.preventDefault();
+		break;
+	}
+};
+
+function outterKeyDown(key){
+	alert(key);
+	switch(key){
+	case 22:
+		keyDownMaster = 'userSetting';
+		$("#settingPanel").slideDown();
+		alert('blue key setted');
+		break;
+	case 21:
+		keyDownMaster = 'history';
+		$("#history").slideDown();
+		alert('yello key setted');
+		break;
+	}
+}
+
+function userSettingKeyDown(key){
+		var keyCode = key;
+		switch(userSettingKeyMaster){
 		case 'userSetting':
 			switch(keyCode){
 				case tvKey.KEY_DOWN:
@@ -96,9 +209,13 @@ Main.keyDown = function(){
 					break;
 				case tvKey.KEY_ENTER:
 					$("#dropdown_" + elem).slideDown("slow");
-					keyDownMaster = 'inDropdown';
+					userSettingKeyMaster = 'inDropdown';
 					dropdown = Number(elem);
 					subMenu = 0;
+					break;
+		        case tvKey.KEY_RETURN:
+					$("#settingPanel").slideUp();
+					keyDownMaster = 'outter';
 					break;
 			}
 			break;
@@ -127,7 +244,7 @@ Main.keyDown = function(){
 				$("#dropdown_" + elem).slideUp();
 				subMenu = 0;
 				//state를 userSetting으로
-				keyDownMaster = 'userSetting';
+				userSettingKeyMaster = 'userSetting';
 				var res = '';
 				//파일입출력...
 				for(var i = 1; i <= 5; i++)
@@ -205,13 +322,26 @@ var Convergence = {
     		alert(key + ' : ' + oDeviceInfo.data[key]);
     	}
     	var hi = jQuery.parseJSON(oDeviceInfo.data.message1);
-    	alert(hi);
-    	alert('opcode : ' + hi.opcode);
-    	alert('sender : ' + hi.sender);
-    	alert('pno : ' + hi.pno);
-    	alert('nickname : ' + hi.nickname);
-    	alert('color : ' + hi.color);
-    	alert('mesg : ' + hi.mesg);
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+    	History.mesgq.push(time + '|' + hi.opcode + '|' + hi.nickname + '|' + hi.title + '|' + hi.mesg.substr(0, 10));
+    	if(History.mesgq.length > 5)
+    		$('#historyTableDiv').css("height", 77*(5 + 1));
+    	else
+    		$('#historyTableDiv').css("height", 77*(History.mesgq.length));
+    	if(History.mesgq.length > 40)
+    		History.mesgq.shift();
+    	
+		var su = '';
+//		if(History.mesgq.length == 6)
+//			History.mesgq.shift();
+		//su += '<table id="historyTable" border="1"><tr><th colspan="3">알림 기록</th></tr><tr><td>수신 시간</td><td>알림 종류</td><td>사용자명</td><td>제목</td><td>내용</td></tr>';
+		for(var i = 0; i < History.mesgq.length; i++){
+			var temp = History.mesgq[i].split('|');
+			su += '<tr id="perScroll' + i + '">' + '<td id="perScroll_'+i+'1" style="width:15%;">' + temp[0] + '</td><td id="perScroll_'+i+'2" style="width: 15%;">' + temp[1] + '</td><td id="perScroll_'+i+'3" style="width: 15%;">' + temp[2] + '</td><td id="perScroll_'+i+'4" style="width: 25%;">' + temp[3] + '</td><td id="perScroll_'+i+'5" style="width: 30%;">' + temp[4] + '</td></tr>';
+		}
+		//su += '</table>';
+		$('#historyTable').html(su);
     },
     sendMessage: function(oDevice, sMessage) {
         return oDevice.sendMessage(sMessage);

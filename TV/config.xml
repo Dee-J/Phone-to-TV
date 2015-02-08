@@ -1,38 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <widget>
-	<cpname itemtype="string"/>
-	<cplogo itemtype="string"/>
-	<cpauthjs itemtype="string"/>
-	
-	<BigThumbIcon>icon/ic_115x95.png</BigThumbIcon>
-	<ThumbIcon>icon/ic_106x88.png</ThumbIcon>
-	<BigListIcon>icon/ic_95x78.png</BigListIcon>
-	<ListIcon>icon/ic_85x70.png</ListIcon>
-	
-	<BigThumbIconHD>icon/ic_173x143.png</BigThumbIconHD>
-	<ThumbIconHD>icon/ic_158x130.png</ThumbIconHD>
-	<BigListIconHD>icon/ic_143x118.png</BigListIconHD>
-	<ListIconHD>icon/ic_128x105.png</ListIconHD>
-	<Icon1080>icon/ic_128x105.png</Icon1080>
-	
-	<category itemtype="string">Lifestyle</category>
+	<cpname itemtype="string"></cpname>
+	<cplogo itemtype="string"></cplogo>
+	<cpauthjs itemtype="string"></cpauthjs>
+	<ThumbIcon itemtype="string">icon/sampleIcon_106_87.png</ThumbIcon>
+	<BigThumbIcon itemtype="string">icon/sampleIcon_115_95.png</BigThumbIcon>
+	<ListIcon itemtype="string">icon/sampleIcon_85_70.png</ListIcon>
+	<BigListIcon itemtype="string">icon/sampleIcon_95_78.png</BigListIcon>
+	<category itemtype="string"></category>
 	<autoUpdate itemtype="boolean">n</autoUpdate>
 	<ver itemtype="string">0.100</ver>
-	<mgrver itemtype="string"/>
+	<mgrver itemtype="string"></mgrver>
 	<fullwidget itemtype="boolean">n</fullwidget>
 	<type itemtype="string">user</type>
 	<srcctl itemtype="boolean">n</srcctl>
-	<ticker itemtype="boolean">y</ticker>
+	<ticker itemtype="boolean">Y</ticker>
 	<childlock itemtype="boolean">n</childlock>
 	<videomute itemtype="boolean">n</videomute>
 	<dcont itemtype="boolean">y</dcont>
-	<widgetname itemtype="string">PT</widgetname>
-	<description itemtype="string"/>
+	<widgetname itemtype="string">tickerSampleApp</widgetname>
+	<description itemtype="string"></description>
 	<width itemtype="string">1280</width>
 	<height itemtype="string">720</height>
 	<author itemtype="group"> 
-		<name itemtype="string"/>
-		<email itemtype="string"/>
-		<link itemtype="string"/>
-		<organization itemtype="string"/>
+		<name itemtype="string"></name>
+		<email itemtype="string"></email>
+		<link itemtype="string"></link>
+		<organization itemtype="string"></organization>
 	</author>
 </widget>
