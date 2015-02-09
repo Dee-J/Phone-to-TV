@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 /* Page3Activity.java */
-public class Page3Activity extends Fragment {
+public class ActivateActivity extends Fragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,7 @@ public class Page3Activity extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		RelativeLayout layout = (RelativeLayout)inflater.inflate(R.layout.activity_page3, container, false);
+		RelativeLayout layout = (RelativeLayout)inflater.inflate(R.layout.activity_activate, container, false);
 		return layout;
 	}
 }

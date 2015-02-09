@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 public class BrowserActivity extends Fragment  {
 
+	private ListView listview;
 
 	private ArrayAdapter<DeviceDisplay> deviceListAdapter;
 	private BrowseRegistryListener registryListener = new BrowseRegistryListener();
@@ -63,25 +64,36 @@ public class BrowserActivity extends Fragment  {
 			upnpService = null;
 		}
 	};
-	private ListView listview;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-		View view=inflater.inflate(R.layout.activity_browser, container, false);
-		listview =(ListView)view.findViewById(R.id.list);
-			
 		deviceListAdapter = new ArrayAdapter<DeviceDisplay>(getActivity(),R.layout.textstyle);
-	
-		switchToDeviceList();
 
 		getActivity().bindService(
 				new Intent(getActivity(), BrowserUpnpService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(listview!=null){
+			ViewGroup parent = (ViewGroup)listview.getParent();
+			if(parent != null)
+				parent.removeView(listview);
+		}
+	}
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	
+		View view=inflater.inflate(R.layout.activity_browser, container, false);
+	
+		listview =(ListView)view.findViewById(R.id.list);
+			
+	
+		switchToDeviceList();
+
+	
 		
 		return view;
 
@@ -292,8 +304,8 @@ public class BrowserActivity extends Fragment  {
 								return;
 
 							mConvergenceUtil.setIpAddress(appurl);
-							getActivity().unbindService(serviceConnection);
-							upnpService.getRegistry().removeListener(registryListener);
+//							getActivity().unbindService(serviceConnection);
+//							upnpService.getRegistry().removeListener(registryListener);
 //							SharedPreferences pref = getSharedPreferences("MySettings", MODE_PRIVATE);
 //							Editor editor =pref.edit();
 //							editor.putString("appURL", appurl);

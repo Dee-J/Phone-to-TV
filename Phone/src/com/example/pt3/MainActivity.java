@@ -108,17 +108,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			
 			switch(position){
 				case 0:
-					return new Page1Activity();
+					return new NickNameActivity();
 				case 1:
-					return new Page2Activity();
+					return new NotificatonTestActivity();
 				case 2:
-					return new Page3Activity();
+					return new PrivacyActivity();
 				case 3:
 					return new BrowserActivity();
 				case 4:
-					return new BrowserActivity();
+					return new AppListActivity();
 				case 5:
-					return new BrowserActivity();
+					return new ActivateActivity();
 			
 				default:
 					return null;
