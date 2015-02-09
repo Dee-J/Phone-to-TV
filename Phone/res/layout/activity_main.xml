@@ -1,29 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-         android:id="@android:id/tabhost"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-      >
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:padding="5dp">
+<!-- 수정된 activity_main.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
 
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#88FFFF00" >
+    <LinearLayout 
+        android:id="@+id/menuIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="103dp"
-                android:layout_height="wrap_content"
-                android:onClick="ButtonClicked"
-                android:text="Button" />
+        <Button
+            android:id="@+id/nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:text="사용자이름 설정"
+            android:textColor="@drawable/tab_text_selector" />
 
-        </FrameLayout>
+        <Button
+            android:id="@+id/testNoti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:text="연결확인"
+            android:textColor="@drawable/tab_text_selector" />
 
+        <Button
+            android:id="@+id/privacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:text="사생활보호"
+            android:textColor="@drawable/tab_text_selector" />
+
+        <Button
+            android:id="@+id/device_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="연결설정" 
+            android:textColor="@drawable/tab_text_selector"
+            android:background="@drawable/tab_selector"/>
+        <Button
+            android:id="@+id/app_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="알림받을앱"
+            android:textColor="@drawable/tab_text_selector"
+            android:background="@drawable/tab_selector" />
+        <Button
+            android:id="@+id/activate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="활성화"
+            android:textColor="@drawable/tab_text_selector"
+            android:background="@drawable/tab_selector" />
     </LinearLayout>
-</LinearLayout>
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:requiresFadingEdge="horizontal" 
+          android:layout_below="@id/menuIcon" />
+
+</RelativeLayout>

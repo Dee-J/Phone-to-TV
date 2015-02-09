@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/pyh/Desktop/단기/samsung-tvapps-nservice-android-master/samsung-tvapps-nservice-android-master/lib/clink210.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/pyh/Desktop/단기/samsung-tvapps-nservice-android-master/samsung-tvapps-nservice-android-master/lib/gson-2.2.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/pyh/Desktop/단기/samsung-tvapps-nservice-android-master/samsung-tvapps-nservice-android-master/lib/nservice-20140314.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/pyh/Desktop/단기/UpnpPlayer/libs/cling-core-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/pyh/Desktop/단기/UpnpPlayer/libs/cling-support-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/pyh/Desktop/단기/UpnpPlayer/libs/teleal-common-1.0.12.jar"/>
