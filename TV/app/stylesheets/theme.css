@@ -9,6 +9,15 @@
 .box_shadow {
 	background: #D8D8D8; 
 }
+.box_shadow2 {
+border: 5px outset #FFFFFF;
+margin: 0px;
+padding: 0px;
+}
+.non_box_shadow2 {
+margin: 5px;
+padding: 0px;
+}
 <!--박스 쉐도우 주기-->
 
  

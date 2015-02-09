@@ -2,6 +2,18 @@ var elem = 0;
 var tvKey = new Common.API.TVKeyValue();
 var widgetAPI = new Common.API.Widget();
 
+
+var PL_NNAVI_STATE_BANNER_VOL = 1;
+
+window.onShow = function(e) {
+    var NNaviPlugin = caph.platform.dtv.Device.plugin('NNAVI');
+    NNaviPlugin.SetBannerState(PL_NNAVI_STATE_BANNER_VOL);
+    caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.VOL_UP);
+    caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.VOL_DOWN);
+};
+
+
+
 var Main = {
 	content : {
 		elem : jQuery('#noti'),
@@ -25,13 +37,39 @@ Main.onLoad = function()
 	Main.enableKeys();
 	Usersetting.keyInit();
 	History.Init();
+	$("#icon1").css('width', 50).css("height", 50).css("left", 970+100).css("top", 20);
+	$("#icon2").css('width', 50).css("height", 50).css("left", 1030+100).css("top", 20);
+	$("#icon3").css('width', 50).css("height", 50).css("left", 1090+100).css("top", 20);
+	$("#icon1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 970+100).css("top", 20).hide();
+	$("#icon2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1030+100).css("top", 20).hide();
+	$("#icon3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1090+100).css("top", 20).hide();
+
+	$("#mail1").css('width', 25).css("height", 70).css("left", 1260).css("top", 20).hide();
+	$("#mail2").css('width', 25).css("height", 70).css("left", 1260).css("top", 60 + 45*2).hide();
+	$("#mail3").css('width', 25).css("height", 70).css("left", 1260).css("top", 100 + 45*3).hide();
+	$("#mail4").css('width', 25).css("height", 70).css("left", 1260).css("top", 140 + 45*4).hide();
+	$("#mail1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 20).hide();
+	$("#mail2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 60 + 45*2).hide();
+	$("#mail3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 100 + 45*3).hide();
+	$("#mail4Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 140 + 45*4).hide();
+	iconInit();
 };
+
+function iconInit(){
+	for(var i = 1; i < 4; i++)
+		$("#iconInner" + i).hide();
+}
 
 History.Init = function(){
 	this.mesgq = new Array();	
 };
 
-
+function successCB() {
+    console.log("tuning is successful");  
+}   
+function errorCB(error) {
+    console.log(error.name);  
+}    
 var Usersetting = {
 		
 };
@@ -42,7 +80,7 @@ var load = function (){
 	if(fileSystemObj.isValidCommonPath(curWidget.id) != 1){
 		fileSystemObj.createCommonDir(curWidget.id);
 	}
-	path = curWidget.id + "/userSetting.dat"
+	path = curWidget.id + "/userSetting.dat";
 };
 
 var read = function(){
@@ -83,9 +121,10 @@ Usersetting.keyInit = function(){
 	$('#usr_2').text(res[1]);
 	$('#usr_3').text(res[2]);
 	$('#usr_4').text(res[3]);
-	//$('#usr_5').text(res[4]);
-	$('#usr_5').text(curWidget.id);
+	$('#usr_5').text(res[4]);
+	//$('#usr_5').text(curWidget.id);
 	$('#settingPanel').hide();
+	initAlertType(res[0]);
 };
 
 var keyDownMaster = 'outter';
@@ -94,12 +133,7 @@ var tmp = 0;
 Main.keyDown = function(){
 	var keyCode = event.keyCode;
 	alert(keyCode + 'key 입력댐');
-	var pluginObjectNNAVI = document.getElementById('pluginObjectNNAVI');
-	var DUID;
-	DUID = pluginObjectNNAVI.GetHWAddr();
-	$('#historyT').html(DUID);
-	alert("디바이스 UID? : " + DUID);
-	$('#key').html(keyCode);
+	
 	switch(keyDownMaster){
 	case 'outter':
 		outterKeyDown(keyCode);
@@ -112,10 +146,18 @@ Main.keyDown = function(){
 		historyKeyDown(keyCode);
 		break;
 	}
+	
+	
+	//unregister 처리
 	switch(keyCode){
 	case tvKey.KEY_RETURN:
 		event.preventDefault();
-		//widgetAPI.blockNavigation(event);
+		break;
+	case 68:
+		webapis.tv.channel.tuneUp(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
+		break;
+	case 65:
+		webapis.tv.channel.tuneDown(successCB, errorCB, webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
 		break;
 	}
 };
@@ -144,13 +186,13 @@ function historyKeyDown(key){
     	$('#perScroll_' + tmp + '5').addClass('box_shadow');
 		break;
     case tvKey.KEY_UP:
-    	if(tmp == 0)
-    		tmp = History.mesgq.length;
 		$('#perScroll_' + tmp + '1').removeClass('box_shadow');
 		$('#perScroll_' + tmp + '2').removeClass('box_shadow');
 		$('#perScroll_' + tmp + '3').removeClass('box_shadow');
 		$('#perScroll_' + tmp + '4').removeClass('box_shadow');
 		$('#perScroll_' + tmp + '5').removeClass('box_shadow');
+    	if(tmp == 0)
+    		tmp = History.mesgq.length;
 		tmp -= 1;
     	$('#historyTableDiv').scrollTop(tmp * 77);
     	$('#perScroll_' + tmp + '1').addClass('box_shadow');
@@ -163,8 +205,6 @@ function historyKeyDown(key){
 		break;	
 	}
 	
-	
-
 	switch(key){
 	case tvKey.KEY_RETURN:
 		event.preventDefault();
@@ -173,7 +213,6 @@ function historyKeyDown(key){
 };
 
 function outterKeyDown(key){
-	alert(key);
 	switch(key){
 	case 22:
 		keyDownMaster = 'userSetting';
@@ -186,6 +225,60 @@ function outterKeyDown(key){
 		alert('yello key setted');
 		break;
 	}
+	switch($('#usr_1').text()){
+	case '메일함형 알림':
+		break;
+	case '아이콘형 알림':
+		iconKeyDown(key);
+		break;
+	}
+}
+
+var iconIsMenuIn = 0;
+var iconIndex = 0;
+
+function iconKeyDown(key){
+	if(iconIsMenuIn == 0){
+		switch(key){
+		case tvKey.KEY_RIGHT:
+			$('#icon' + iconIndex).removeClass('box_shadow2');
+			$('#icon' + iconIndex).addClass('non_box_shadow2');
+			iconIndex += 1;
+			if(iconIndex == 4)
+				iconIndex = 1;
+			$('#icon' + iconIndex).removeClass('non_box_shadow2');
+			$('#icon' + iconIndex).addClass('box_shadow2');
+			break;
+		case tvKey.KEY_LEFT:
+			$('#icon' + iconIndex).removeClass('box_shadow2');
+			$('#icon' + iconIndex).addClass('non_box_shadow2');
+			iconIndex -= 1;
+			if(iconIndex == 0)
+				iconIndex = 3;
+			$('#icon' + iconIndex).removeClass('non_box_shadow2');
+			$('#icon' + iconIndex).addClass('box_shadow2');
+			break;
+		case tvKey.KEY_ENTER:
+			iconIsMenuIn = 1;
+			showIconMenu();
+			break;
+		}
+	}else{
+		switch(key){
+        case tvKey.KEY_RETURN:
+        	iconIsMenuIn = 0;
+        	hideIconMenu();
+        	break;
+		}
+	}
+}
+
+function showIconMenu(){
+	$("#iconInner" + iconIndex).slideDown();
+}
+function hideIconMenu(){
+	$("#iconInner" + iconIndex).slideUp();
+	icon.flushQ(iconIndex);
 }
 
 function userSettingKeyDown(key){
@@ -249,11 +342,49 @@ function userSettingKeyDown(key){
 				//파일입출력...
 				for(var i = 1; i <= 5; i++)
 					res += $('#usr_' + i).text() + '|';
+				initAlertType($('#usr_1').text());
 				write(res);
 				break;
 			}
 			break;
 		}
+}
+function disableAll(){
+	$("#icon1").hide();
+	$("#icon2").hide();
+	$("#icon3").hide();
+	$("#mail1").hide();
+	$("#mail2").hide();
+	$("#mail3").hide();
+	$("#mail4").hide();
+}
+
+function initAlertType(t){
+	disableAll();
+	switch(t){
+	case '자막형 알림':
+		break;
+	case '메일함형 알림':
+		initMails();
+		break;
+	case '카드형 알림':
+		break;
+	case '아이콘형 알림':
+		initIcons();
+		break;
+	}
+}
+
+function initIcons(){
+	$("#icon1").show();
+	$("#icon2").show();
+	$("#icon3").show();
+}
+
+function initMails(){
+	for(var i = 1; i <= mail.connectedUserCount; i++){
+		$("#mail" + i).show();
+	}
 }
 
 // 애플리케이션의 종료시점에 호출되는 이벤트 처리 함수
@@ -263,8 +394,7 @@ Main.onUnload = function()
 		oIME.onClose();
 	}
 };
-Main.enableKeys = function()	
-{
+Main.enableKeys = function() {
 	document.getElementById("anchor").focus();
 };
 
@@ -324,7 +454,7 @@ var Convergence = {
     	var hi = jQuery.parseJSON(oDeviceInfo.data.message1);
 		var dt = new Date();
 		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-    	History.mesgq.push(time + '|' + hi.opcode + '|' + hi.nickname + '|' + hi.title + '|' + hi.mesg.substr(0, 10));
+    	History.mesgq.push(time + '|' + hi.opcode + '|' + hi.nickname + '|' + hi.title.substr(0, 10) + '|' + hi.mesg.substr(0, 10));
     	if(History.mesgq.length > 5)
     		$('#historyTableDiv').css("height", 77*(5 + 1));
     	else
@@ -333,15 +463,27 @@ var Convergence = {
     		History.mesgq.shift();
     	
 		var su = '';
-//		if(History.mesgq.length == 6)
-//			History.mesgq.shift();
-		//su += '<table id="historyTable" border="1"><tr><th colspan="3">알림 기록</th></tr><tr><td>수신 시간</td><td>알림 종류</td><td>사용자명</td><td>제목</td><td>내용</td></tr>';
 		for(var i = 0; i < History.mesgq.length; i++){
 			var temp = History.mesgq[i].split('|');
-			su += '<tr id="perScroll' + i + '">' + '<td id="perScroll_'+i+'1" style="width:15%;">' + temp[0] + '</td><td id="perScroll_'+i+'2" style="width: 15%;">' + temp[1] + '</td><td id="perScroll_'+i+'3" style="width: 15%;">' + temp[2] + '</td><td id="perScroll_'+i+'4" style="width: 25%;">' + temp[3] + '</td><td id="perScroll_'+i+'5" style="width: 30%;">' + temp[4] + '</td></tr>';
+			su += '<tr id="perScroll' + i + '">' + '<td id="perScroll_'+i+'1" style="width:15%;">' + temp[0] + '</td><td id="perScroll_'+i+'2" style="width: 15%;">'
+				+ temp[1] + '</td><td id="perScroll_'+i+'3" style="width: 15%;">' + temp[2] + '</td><td id="perScroll_'+i+'4" style="width: 25%;">' + temp[3] + '</td><td id="perScroll_' + i
+				+ '5" style="width: 30%;">' + temp[4] + '</td></tr>';
 		}
-		//su += '</table>';
 		$('#historyTable').html(su);
+		switch($('#usr_1').text()){
+		case '자막형 알림':
+			makeCaption(hi);
+			break;
+		case '메일함형 알림':
+			mail.push(hi);
+			break;
+		case '카드형 알림':
+			card.push_back(hi);
+			break;
+		case '아이콘형 알림':
+			icon.push(hi);
+			break;
+		}
     },
     sendMessage: function(oDevice, sMessage) {
         return oDevice.sendMessage(sMessage);
@@ -355,9 +497,184 @@ var Convergence = {
         return '<img src="' + sUrl + '"/>';
     }
 };
-
 Convergence.init();
 
+var mail = new MailManager();
+
+/* 클래스 선언 */
+function MailManager() {
+	/* public 변수 */
+	this.connectedUserList = new Array();
+	this.connectedUserCount = 0;
+	this.mailBox = new Array(4);
+	
+	/* private 변수 */
+	
+	/* public 메서드 */
+	this.push = function (obj) {
+		if(this.connectedUserList[obj.nickname] == null){
+			if(this.connectedUserCount == 4){
+				return;
+			}
+			this.connectedUserCount += 1;
+			this.connectedUserList[this.connectedUserCount] = obj.nickname;
+			this.connectedUserList[obj.nickname] = this.connectedUserCount;
+			initMails();
+			//등록맨
+		}
+		alert('gogo' + this.mailBox[this.connectedUserList[obj.nickname]].length);
+		if(this.mailBox[this.connectedUserList[obj.nickname]].length < 20){
+			this.mailBox[this.connectedUserList[obj.nickname]].push(obj);
+			$("#mail"+this.connectedUserList[obj.nickname]+"Circle").show().text(this.mailBox[this.connectedUserList[obj.nickname]].length);
+			alert("#mail"+this.connectedUserList[obj.nickname]+"Circle");
+		}
+	};
+	
+	this.showMessages = function(idx){
+		
+	};
+	/* private 메서드 */
+}
+
+
+var icon = new IconManager();
+
+/* 클래스 선언 */
+function IconManager() {
+	/* public 변수 */
+
+	this.notiNum = 0;
+	/* private 변수 */
+	var callNum = 0;
+	var smsNum = 0;
+	
+	/* public 메서드 */
+	this.push = function (obj) {
+		switch(obj.opcode){
+		case '전화':
+			break;
+		case '문자':
+			break;
+		default:
+			this.pushNoti(obj);
+			break;
+		}
+	};
+
+	this.flushQ = function(n){
+		$('#iconInner' + n).text('');
+		this.notiNum = 0;
+		$("#icon" + n + "Circle").hide();
+	};
+	this.pushNoti = function(obj) {
+		//그려줘야함...
+		this.notiNum += 1;
+		$('#iconInner3').append("<div>" + obj.nickname + "</div>");
+		$("#icon3Circle").show().text(this.notiNum);
+	};
+}
+
+
+
+
+var card = new CardManager();
+
+/* 클래스 선언 */
+function CardManager() {
+	/* public 변수 */
+
+	/* private 변수 */
+	var readyQueue = new Array();
+	var screenShowCardNum = 0;
+	var cardIndex = 0;
+	var cardVarDelete = 0;
+	var screenShowCardArray = new Array();
+	
+	/* public 메서드 */
+	this.push_back = function (obj) {
+		if(screenShowCardNum == 5)
+			readyQueue.push(obj);
+		else
+			drawAppend(obj);
+	};
+	
+	/* private 메서드 */
+	var drawAppend = function(obj) {
+		//그려줘야함...
+		$('#card').append("<div id=\"instantCardAlert" + cardIndex + "\" style=\"position: absolute;\"></div>");
+		$("#instantCardAlert" + cardIndex).text(obj.nickname);
+		$("#instantCardAlert" + cardIndex).css('background-color', 'red');
+		$("#instantCardAlert" + cardIndex).css('width', 200);
+		$("#instantCardAlert" + cardIndex).css("left", 900);
+		$("#instantCardAlert" + cardIndex).css("top", 70 * screenShowCardNum);
+		$("#instantCardAlert" + cardIndex).css("height", 50);
+		setTimeout(function(){
+			dequeue();
+		}, 3000);
+		screenShowCardArray.push($('#instantCardAlert' + cardIndex));
+		screenShowCardNum += 1;
+		cardIndex += 1;
+	};
+	
+	var dequeue = function(){
+		$("#instantCardAlert" + cardVarDelete).animate({
+			opacity: 0
+		}, 200, function(){
+			$("#instantCardAlert" + cardVarDelete).remove();
+			cardVarDelete += 1;
+		});
+		screenShowCardArray.shift();
+		for(var i = 0; i < screenShowCardArray.length; i++){
+			screenShowCardArray[i].animate({ "top": "-=70px"}, 200, "linear");
+		}
+		screenShowCardNum -= 1;
+		if(readyQueue.length != 0){
+			drawAppend(readyQueue[0]);
+			readyQueue.shift();
+		}
+	};
+}
+
+var captionVar = 0;
+var captionVarDelete = 1;
+
+function makeCaption(obj){
+	if($('#instantCaptionAlert' + captionVar).width() == null || $('#instantCaptionAlert' + captionVar).offset().left + $("#instantCaptionAlert" + captionVar).width() < 1280){
+			//새로만들기
+		captionVar += 1;
+		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
+		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", 1280)
+			.css("top", 640).css("height", 50).animate({ "left": "-=1500px"}, 12000, "linear", function(){
+				$("#instantCaptionAlert" + captionVarDelete).remove();
+				captionVarDelete++;
+			} );
+	}else{
+		//$("#instantCaptionAlert" + captionVar).text($("#instantCaptionAlert" + captionVar).text() + obj.nickname);
+		captionVar += 1;
+		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
+		var lft = $("#instantCaptionAlert" + (captionVar-1)).offset().left + $("#instantCaptionAlert" + (captionVar-1)).width();
+		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", lft - 10)
+			.css("top", 640).css("height", 50).animate({ "left": "-=" + (lft + 220) + "px"}, (lft + 220)*8, "linear", function(){
+				$("#instantCaptionAlert" + captionVarDelete).remove();
+				captionVarDelete++;
+			});
+	}
+}
+
+function requestToServer(authKey, regID, opcode, dummy){
+	var formData = "auth=" + authKey + '&opcode=' + opcode + '&smsNo=' + dummy + '&regID=' + regID;  //Name value Pair
+	$.ajax({
+	    url : "http://210.118.74.55:18080/sendMessage",
+	    type: "POST",
+	    data : formData,
+	    success: function(data, textStatus, jqXHR) {
+	        //
+	    },
+	    error: function (jqXHR, textStatus, errorThrown) {
+	 
+	    }
+	});
+}
 
 //요청한 이벤트를 핸들링하는 함수
 var handleMobileEvent = function(event){
@@ -370,4 +687,3 @@ var handleMobileEvent = function(event){
 			break;
 	}
 };
-
