@@ -43,6 +43,15 @@ Main.onLoad = function()
 	$("#icon1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 970+100).css("top", 20).hide();
 	$("#icon2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1030+100).css("top", 20).hide();
 	$("#icon3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1090+100).css("top", 20).hide();
+
+	$("#mail1").css('width', 25).css("height", 70).css("left", 1260).css("top", 20).hide();
+	$("#mail2").css('width', 25).css("height", 70).css("left", 1260).css("top", 60 + 45*2).hide();
+	$("#mail3").css('width', 25).css("height", 70).css("left", 1260).css("top", 100 + 45*3).hide();
+	$("#mail4").css('width', 25).css("height", 70).css("left", 1260).css("top", 140 + 45*4).hide();
+	$("#mail1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 20).hide();
+	$("#mail2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 60 + 45*2).hide();
+	$("#mail3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 100 + 45*3).hide();
+	$("#mail4Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 140 + 45*4).hide();
 	iconInit();
 };
 
@@ -344,6 +353,10 @@ function disableAll(){
 	$("#icon1").hide();
 	$("#icon2").hide();
 	$("#icon3").hide();
+	$("#mail1").hide();
+	$("#mail2").hide();
+	$("#mail3").hide();
+	$("#mail4").hide();
 }
 
 function initAlertType(t){
@@ -352,6 +365,7 @@ function initAlertType(t){
 	case '자막형 알림':
 		break;
 	case '메일함형 알림':
+		initMails();
 		break;
 	case '카드형 알림':
 		break;
@@ -365,6 +379,12 @@ function initIcons(){
 	$("#icon1").show();
 	$("#icon2").show();
 	$("#icon3").show();
+}
+
+function initMails(){
+	for(var i = 1; i <= mail.connectedUserCount; i++){
+		$("#mail" + i).show();
+	}
 }
 
 // 애플리케이션의 종료시점에 호출되는 이벤트 처리 함수
@@ -455,6 +475,7 @@ var Convergence = {
 			makeCaption(hi);
 			break;
 		case '메일함형 알림':
+			mail.push(hi);
 			break;
 		case '카드형 알림':
 			card.push_back(hi);
@@ -478,62 +499,41 @@ var Convergence = {
 };
 Convergence.init();
 
-var card = new CardManager();
+var mail = new MailManager();
 
 /* 클래스 선언 */
-function CardManager() {
+function MailManager() {
 	/* public 변수 */
-
+	this.connectedUserList = new Array();
+	this.connectedUserCount = 0;
+	this.mailBox = new Array(4);
+	
 	/* private 변수 */
-	var readyQueue = new Array();
-	var screenShowCardNum = 0;
-	var cardIndex = 0;
-	var cardVarDelete = 0;
-	var screenShowCardArray = new Array();
 	
 	/* public 메서드 */
-	this.push_back = function (obj) {
-		if(screenShowCardNum == 5)
-			readyQueue.push(obj);
-		else
-			drawAppend(obj);
+	this.push = function (obj) {
+		if(this.connectedUserList[obj.nickname] == null){
+			if(this.connectedUserCount == 4){
+				return;
+			}
+			this.connectedUserCount += 1;
+			this.connectedUserList[this.connectedUserCount] = obj.nickname;
+			this.connectedUserList[obj.nickname] = this.connectedUserCount;
+			initMails();
+			//등록맨
+		}
+		alert('gogo' + this.mailBox[this.connectedUserList[obj.nickname]].length);
+		if(this.mailBox[this.connectedUserList[obj.nickname]].length < 20){
+			this.mailBox[this.connectedUserList[obj.nickname]].push(obj);
+			$("#mail"+this.connectedUserList[obj.nickname]+"Circle").show().text(this.mailBox[this.connectedUserList[obj.nickname]].length);
+			alert("#mail"+this.connectedUserList[obj.nickname]+"Circle");
+		}
 	};
 	
+	this.showMessages = function(idx){
+		
+	};
 	/* private 메서드 */
-	var drawAppend = function(obj) {
-		//그려줘야함...
-		$('#card').append("<div id=\"instantCardAlert" + cardIndex + "\" style=\"position: absolute;\"></div>");
-		$("#instantCardAlert" + cardIndex).text(obj.nickname);
-		$("#instantCardAlert" + cardIndex).css('background-color', 'red');
-		$("#instantCardAlert" + cardIndex).css('width', 200);
-		$("#instantCardAlert" + cardIndex).css("left", 900);
-		$("#instantCardAlert" + cardIndex).css("top", 70 * screenShowCardNum);
-		$("#instantCardAlert" + cardIndex).css("height", 50);
-		setTimeout(function(){
-			dequeue();
-		}, 3000);
-		screenShowCardArray.push($('#instantCardAlert' + cardIndex));
-		screenShowCardNum += 1;
-		cardIndex += 1;
-	};
-	
-	var dequeue = function(){
-		$("#instantCardAlert" + cardVarDelete).animate({
-			opacity: 0
-		}, 200, function(){
-			$("#instantCardAlert" + cardVarDelete).remove();
-			cardVarDelete += 1;
-		});
-		screenShowCardArray.shift();
-		for(var i = 0; i < screenShowCardArray.length; i++){
-			screenShowCardArray[i].animate({ "top": "-=70px"}, 200, "linear");
-		}
-		screenShowCardNum -= 1;
-		if(readyQueue.length != 0){
-			drawAppend(readyQueue[0]);
-			readyQueue.shift();
-		}
-	};
 }
 
 
@@ -572,8 +572,6 @@ function IconManager() {
 		$('#iconInner3').append("<div>" + obj.nickname + "</div>");
 		$("#icon3Circle").show().text(this.notiNum);
 	};
-	
-	/* private 메서드 */
 }
 
 
@@ -645,31 +643,21 @@ function makeCaption(obj){
 			//새로만들기
 		captionVar += 1;
 		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
-		$("#instantCaptionAlert" + captionVar).text(obj.nickname);
-		$("#instantCaptionAlert" + captionVar).css('background-color', 'red');
-		$("#instantCaptionAlert" + captionVar).css('width', 200);
-		$("#instantCaptionAlert" + captionVar).css("left", 1280);
-		$("#instantCaptionAlert" + captionVar).css("top", 640);
-		$("#instantCaptionAlert" + captionVar).css("height", 50);
-		$("#instantCaptionAlert" + captionVar).animate({ "left": "-=1500px"}, 12000, "linear", function(){
-			$("#instantCaptionAlert" + captionVarDelete).remove();
-			captionVarDelete++;
-		} );
+		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", 1280)
+			.css("top", 640).css("height", 50).animate({ "left": "-=1500px"}, 12000, "linear", function(){
+				$("#instantCaptionAlert" + captionVarDelete).remove();
+				captionVarDelete++;
+			} );
 	}else{
 		//$("#instantCaptionAlert" + captionVar).text($("#instantCaptionAlert" + captionVar).text() + obj.nickname);
 		captionVar += 1;
 		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
-		$("#instantCaptionAlert" + captionVar).text(obj.nickname);
-		$("#instantCaptionAlert" + captionVar).css('background-color', 'red');
-		$("#instantCaptionAlert" + captionVar).css('width', 200);
 		var lft = $("#instantCaptionAlert" + (captionVar-1)).offset().left + $("#instantCaptionAlert" + (captionVar-1)).width();
-		$("#instantCaptionAlert" + captionVar).css("left", lft - 10);
-		$("#instantCaptionAlert" + captionVar).css("top", 640);
-		$("#instantCaptionAlert" + captionVar).css("height", 50);
-		$("#instantCaptionAlert" + captionVar).animate({ "left": "-=" + (lft + 220) + "px"}, (lft + 220)*8, "linear", function(){
-			$("#instantCaptionAlert" + captionVarDelete).remove();
-			captionVarDelete++;
-		});
+		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", lft - 10)
+			.css("top", 640).css("height", 50).animate({ "left": "-=" + (lft + 220) + "px"}, (lft + 220)*8, "linear", function(){
+				$("#instantCaptionAlert" + captionVarDelete).remove();
+				captionVarDelete++;
+			});
 	}
 }
 
