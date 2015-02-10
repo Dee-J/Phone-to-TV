@@ -44,12 +44,47 @@
 		<div id="mail3Circle" style="position: absolute; width: auto; background: url('./images/circle.png');background-size: cover;" align="center"></div>
 		<div id="mail4Circle" style="position: absolute; width: auto; background: url('./images/circle.png');background-size: cover;" align="center"></div>
 		
-		<div id="TvToPhonePanel" style="position: absolute; width: auto; background: url('./images/circle.png'); background-size: cover;" align="center">
+		<div id="TvToPhonePanel" align="center">
 			<!-- TV to phone... 이제 마지막이다! -->
-			
+			<table border="1" style="width: 700px; margin: 0 auto; table-layout:fixed;">
+				<tr>
+					<th colspan="2">
+						폰으로 알림
+					</th>
+				</tr>
+			</table>
+			<table border="1" style="width: 700px; padding: 0px; margin: 0 auto; table-layout:fixed;">
+				<tr>
+					<td id="historyT" style="width: 40%;">접속 시각</td>
+					<td id="historyV" style="width: 60%;">사용자명</td>
+				</tr>
+			</table>
+			<div id="userTableDiv" style="width: 700px; overflow: scroll; margin: 0 auto; padding: 0px; border: 0px;">
+				<table id="userTable" border="1" style="overflow: auto; width: 700px; margin: 0px; padding: 0px; top-margin: -3px; table-layout:fixed;">
+				</table>
+			</div>
+		</div>
+		<div id="userTableDropdown" style="position: absolute; display: none; margin: 0 auto; top: 100px; left: 1000px;">
+			<table border="1">
+				<tr>
+					<th colspan="2">
+						작업 선택
+					</th>
+				</tr>
+				<tr>
+					<td colspan="2" id="userDropdown_1">소리 설정</td>
+				</tr>
+				<tr>
+					<td colspan="2" id="userDropdown_2">진동 설정</td>
+				</tr>
+				<tr>
+					<td colspan="2" id="userDropdown_3">무음 설정</td>
+				</tr>
+			</table>
 		</div>
 		<!-- 메일박스 끝-->
-		<div id="history" style="display: none; ">
+		
+		<div id="history" style="display: none;">
 			<table border="1" style="width: 1200px; margin: 0 auto; table-layout:fixed;">
 				<tr>
 					<th colspan="3">

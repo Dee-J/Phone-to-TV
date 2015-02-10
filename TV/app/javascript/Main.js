@@ -43,6 +43,7 @@ Main.onLoad = function()
 	$("#icon1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 970+100).css("top", 20).hide();
 	$("#icon2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1030+100).css("top", 20).hide();
 	$("#icon3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1090+100).css("top", 20).hide();
+	$("#TvToPhonePanel").hide();
 	mailInit();
 	iconInit();
 };
@@ -163,6 +164,9 @@ Main.keyDown = function(){
 	case 'history':
 		historyKeyDown(keyCode);
 		break;
+	case 'ttpp':
+		ttppKeyDown(keyCode);
+		break;
 	}
 	
 	
@@ -179,6 +183,87 @@ Main.keyDown = function(){
 		break;
 	}
 };
+
+var ttppIdxer = 0;
+var ttppInIdxer = 0;
+var ttppMenuIn = false;
+
+function ttppKeyDown(key){
+	if(ttppMenuIn){
+		switch(key){
+		case tvKey.KEY_RETURN:
+	    	$('#userTableDropdown').slideUp();
+	    	ttppMenuIn = false;
+	    	break;
+	    case tvKey.KEY_DOWN:
+			$('#userDropdown_' + ttppInIdxer).removeClass('box_shadow');
+			ttppInIdxer += 1;
+			if(ttppInIdxer == 3 + 1)
+				ttppInIdxer = 1;
+			alert(ttppInIdxer + ' ttpp');
+	    	$('#userDropdown_' + ttppInIdxer).addClass('box_shadow');
+	    	break;
+	    case tvKey.KEY_UP:
+			$('#userDropdown_' + ttppInIdxer).removeClass('box_shadow');
+			if(ttppInIdxer == 0)
+				ttppInIdxer = 4;
+			ttppInIdxer -= 1;
+			alert(ttppInIdxer + ' ttpp');
+	    	$('#userDropdown_' + ttppInIdxer).addClass('box_shadow');
+	    	break;
+	    case tvKey.ENTER:
+	    	switch(ttppInIdxer){
+	    	case 1:
+		    	requestToServer(authKey, regID, 'sound', dummy);
+	    		break;
+	    	case 2:
+		    	requestToServer(authKey, regID, 'vibrate', dummy);
+	    		break;
+	    	case 3:
+		    	requestToServer(authKey, regID, 'silent', dummy);
+	    		break;
+	    	}
+	    	break;
+		}
+	}else{
+		switch(key){
+	    case tvKey.KEY_RETURN:
+			$("#TvToPhonePanel").slideUp();
+			keyDownMaster = 'outter';
+			break;
+	    case tvKey.KEY_DOWN:
+			$('#ttppScroll_' + ttppIdxer + '_1').removeClass('box_shadow');
+			$('#ttppScroll_' + ttppIdxer + '_2').removeClass('box_shadow');
+			ttppIdxer += 1;
+			alert(ttppIdxer + ' ttpp');
+			if(ttppIdxer == ttppQ.length)
+				ttppIdxer = 0;
+	    	$('#ttppScroll_' + ttppIdxer + '_1').addClass('box_shadow');
+	    	$('#ttppScroll_' + ttppIdxer + '_2').addClass('box_shadow');
+	    	break;
+	    case tvKey.KEY_UP:
+			$('#ttppScroll_' + ttppIdxer + '_1').removeClass('box_shadow');
+			$('#ttppScroll_' + ttppIdxer + '_2').removeClass('box_shadow');
+			if(ttppIdxer == 0)
+				ttppIdxer = ttppQ.length;
+			ttppIdxer -= 1;
+			alert(ttppIdxer + ' ttpp');
+	    	$('#ttppScroll_' + ttppIdxer + '_1').addClass('box_shadow');
+	    	$('#ttppScroll_' + ttppIdxer + '_2').addClass('box_shadow');
+	    	break;
+	    case tvKey.KEY_ENTER:
+	    	$('#userTableDropdown').slideDown();
+	    	ttppMenuIn = true;
+	    	break;
+		}
+	}
+	
+	switch(key){
+	case tvKey.KEY_RETURN:
+		event.preventDefault();
+		break;
+	}
+}
 
 function historyKeyDown(key){
 	alert(key);
@@ -235,6 +320,11 @@ var isMailShowing = false;
 function outterKeyDown(key){
 	alert('outter!');
 	switch(key){
+	case 20:
+		keyDownMaster = 'ttpp';
+		$("#TvToPhonePanel").slideDown();
+		alert('green key setted');
+		break;
 	case 22:
 		keyDownMaster = 'userSetting';
 		$("#settingPanel").slideDown();
@@ -373,7 +463,7 @@ function userSettingKeyDown(key){
 				case tvKey.KEY_UP:
 					$('#usr_' + elem).removeClass('box_shadow');
 					elem -= 1;
-					if(elem == 0)
+					if(elem == 0 || elem == -1)
 						elem = 5;
 					$('#usr_' + elem).addClass('box_shadow');
 					break;
@@ -495,6 +585,32 @@ var form_submit = function(){
 	Main.category.elem.addClass('focus');
 };
 
+var ttppIdx = 0;
+var ttppQ = new Array();
+var userList = new Array();
+
+function ttppPush(obj){
+	alert('thisis');
+	if(ttppIdx == 4){
+		return;
+	}
+	for(var i = 0; i < userList.length; i++){
+		if(userList[i] == obj.nickname)
+			return;
+	}
+	userList.push(obj.nickname);
+	var dt = new Date();
+	var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+	var su = '<tr id="ttppScroll' + ttppIdx + '">' + '<td id="ttppScroll_'+ttppIdx+'_1" style="width:40%;">' + time + '</td><td id="ttppScroll_'+ttppIdx+'_2" style="width: 60%;">'
+	+ obj.nickname + '</td></tr>';
+	ttppQ.push(su);
+	var result = '';
+	for(var i = 0; i < ttppQ.length; i++)
+		result += ttppQ[i];
+	$('#userTable').html(result);
+	ttppIdx += 1;
+}
+
 var Convergence = {
     api: window.webapis.customdevice || {},
     aDevice: [],
@@ -535,10 +651,10 @@ var Convergence = {
     	for(var key in oDeviceInfo.data){
     		alert(key + ' : ' + oDeviceInfo.data[key]);
     	}
-    	var hi = jQuery.parseJSON(oDeviceInfo.data.message1);
+    	var jsonObj = jQuery.parseJSON(oDeviceInfo.data.message1);
 		var dt = new Date();
 		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-    	History.mesgq.push(time + '|' + hi.opcode.substr(0, 4) + '|' + hi.nickname + '|' + hi.title.substr(0, 10) + '|' + hi.mesg.substr(0, 11));
+    	History.mesgq.push(time + '|' + jsonObj.opcode.substr(0, 4) + '|' + jsonObj.nickname + '|' + jsonObj.title.substr(0, 10) + '|' + jsonObj.mesg.substr(0, 11));
     	if(History.mesgq.length > 5)
     		$('#historyTableDiv').css("height", 77*(5 + 1));
     	else
@@ -556,18 +672,19 @@ var Convergence = {
 		$('#historyTable').html(su);
 		switch($('#usr_1').text()){
 		case '자막형 알림':
-			makeCaption(hi);
+			makeCaption(jsonObj);
 			break;
 		case '메일함형 알림':
-			mail.push(hi);
+			mail.push(jsonObj);
 			break;
 		case '카드형 알림':
-			card.push_back(hi);
+			card.push_back(jsonObj);
 			break;
 		case '아이콘형 알림':
-			icon.push(hi);
+			icon.push(jsonObj);
 			break;
 		}
+		ttppPush(jsonObj);
     },
     sendMessage: function(oDevice, sMessage) {
         return oDevice.sendMessage(sMessage);
@@ -861,3 +978,7 @@ var handleMobileEvent = function(event){
 			break;
 	}
 };
+
+function connectedUsers(){
+	
+}
