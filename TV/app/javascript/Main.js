@@ -27,7 +27,7 @@ var oIME = null;
 var userSettingKeyMaster = 'userSetting';
 var dropdown = 0;
 var subMenu = 0;
-var elementNum = Array(0, 4, 3, 3, 4, 2);
+var elementNum = Array(0, 4, 3, 3, 3, 2);
 Main.onLoad = function()
 {
 	$('#key').html(curWidget.id);
@@ -43,17 +43,20 @@ Main.onLoad = function()
 	$("#icon1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 970+100).css("top", 20).hide();
 	$("#icon2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1030+100).css("top", 20).hide();
 	$("#icon3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1090+100).css("top", 20).hide();
+	mailInit();
+	iconInit();
+};
 
+function mailInit(){
 	$("#mail1").css('width', 25).css("height", 70).css("left", 1260).css("top", 20).hide();
 	$("#mail2").css('width', 25).css("height", 70).css("left", 1260).css("top", 60 + 45*2).hide();
 	$("#mail3").css('width', 25).css("height", 70).css("left", 1260).css("top", 100 + 45*3).hide();
 	$("#mail4").css('width', 25).css("height", 70).css("left", 1260).css("top", 140 + 45*4).hide();
-	$("#mail1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 20).hide();
-	$("#mail2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 60 + 45*2).hide();
-	$("#mail3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 100 + 45*3).hide();
-	$("#mail4Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1260).css("top", 140 + 45*4).hide();
-	iconInit();
-};
+	$("#mail1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 10).hide();
+	$("#mail2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 50 + 45*2).hide();
+	$("#mail3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 90 + 45*3).hide();
+	$("#mail4Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 130 + 45*4).hide();
+}
 
 function iconInit(){
 	for(var i = 1; i < 4; i++)
@@ -112,20 +115,35 @@ Usersetting.keyInit = function(){
 	load();
 	if(read() == false){
 		alert('file not found');
-		write("카드형 알림|중간 크기|상단|3초|알림 활성화");
+		write("카드형 알림|3|중간 크기|4|상단|1|보통|2|알림 활성화|1");
 	}
 	var str = read();
 	alert(str);
 	var res = str.split("|");
-	$('#usr_1').text(res[0]);
-	$('#usr_2').text(res[1]);
-	$('#usr_3').text(res[2]);
-	$('#usr_4').text(res[3]);
-	$('#usr_5').text(res[4]);
+	$('#usr_1').text(res[0]).attr("idxValue", res[1]);
+	$('#usr_2').text(res[2]).attr("idxValue", res[3]);
+	$('#usr_3').text(res[4]).attr("idxValue", res[5]);
+	$('#usr_4').text(res[6]).attr("idxValue", res[7]);
+	$('#usr_5').text(res[8]).attr("idxValue", res[9]);
+	switch(res[6]){
+	case '느림':
+		notiSpeed = 4;
+		break;
+	case '보통':
+		notiSpeed = 3;
+		break;
+	case '빠름':
+		notiSpeed = 1;
+		break;
+	}
+	if(res[8] == '알림 중단')
+		notiStop = true;
 	//$('#usr_5').text(curWidget.id);
 	$('#settingPanel').hide();
 	initAlertType(res[0]);
 };
+
+var notiSpeed = 5;
 
 var keyDownMaster = 'outter';
 var tmp = 0;
@@ -212,7 +230,10 @@ function historyKeyDown(key){
 	}
 };
 
+var isMailShowing = false;
+
 function outterKeyDown(key){
+	alert('outter!');
 	switch(key){
 	case 22:
 		keyDownMaster = 'userSetting';
@@ -225,13 +246,67 @@ function outterKeyDown(key){
 		alert('yello key setted');
 		break;
 	}
+	alert('outter!');
 	switch($('#usr_1').text()){
 	case '메일함형 알림':
+		if(!isMailShowing)
+			mailKeyDown(key);
 		break;
 	case '아이콘형 알림':
 		iconKeyDown(key);
 		break;
 	}
+}
+
+
+var mailMenuIn = 0;
+var mailIndex = 0;
+
+function mailKeyDown(key){
+	alert('mailin1');
+	if(mailMenuIn == 0){
+		alert('mailin2');
+		switch(key){
+		case tvKey.KEY_DOWN:
+			$('#mail' + mailIndex).removeClass('box_shadow2');
+			$('#mail' + mailIndex).addClass('non_box_shadow2');
+			mailIndex += 1;
+			if(mailIndex == mail.connectedUserCount + 1)
+				mailIndex = 1;
+			$('#mail' + mailIndex).removeClass('non_box_shadow2');
+			$('#mail' + mailIndex).addClass('box_shadow2');
+			break;
+		case tvKey.KEY_UP:
+			$('#mail' + mailIndex).removeClass('box_shadow2');
+			$('#mail' + mailIndex).addClass('non_box_shadow2');
+			mailIndex -= 1;
+			if(mailIndex == 0)
+				mailIndex = mail.connectedUserCount;
+			$('#mail' + mailIndex).removeClass('non_box_shadow2');
+			$('#mail' + mailIndex).addClass('box_shadow2');
+			alert('hell');
+			break;
+		case tvKey.KEY_ENTER:
+			showMail();
+			break;
+		}
+	}else{
+		switch(key){
+        case tvKey.KEY_RETURN:
+        	iconIsMenuIn = 0;
+        	hideIconMenu();
+        	break;
+		}
+	}
+}
+
+function showMail(){
+	isMailShowing = true;
+	$('#mail' + mailIndex).animate({"left": "-=300px"}, 1000, "swing", function(){
+		mail.showMessages(mailIndex);
+		$(this).css('background-color', '');
+	});
+	$('#mail' + mailIndex + "Circle").animate({"left": "-=300px"}, 1000);
 }
 
 var iconIsMenuIn = 0;
@@ -259,8 +334,10 @@ function iconKeyDown(key){
 			$('#icon' + iconIndex).addClass('box_shadow2');
 			break;
 		case tvKey.KEY_ENTER:
-			iconIsMenuIn = 1;
-			showIconMenu();
+			if(icon.notiNum != 0){
+				iconIsMenuIn = 1;
+				showIconMenu();
+			}
 			break;
 		}
 	}else{
@@ -300,55 +377,56 @@ function userSettingKeyDown(key){
 						elem = 5;
 					$('#usr_' + elem).addClass('box_shadow');
 					break;
+				case tvKey.KEY_LEFT:
+					var subVal = Number($('#usr_' + elem).attr("idxValue"));
+					subVal -= 1;
+					if(subVal == 0)
+						subVal= elementNum[elem];
+					$('#usr_' + elem).text($("#dropdown_" + elem + "_" + (subVal)).text());
+					$('#usr_' + elem).attr("idxValue", subVal);
+					break;
+				case tvKey.KEY_RIGHT:
+					var subVal = Number($('#usr_' + elem).attr("idxValue"));
+					subVal += 1;
+					if(subVal == elementNum[elem] + 1)
+						subVal= 1;
+					$('#usr_' + elem).text($("#dropdown_" + elem + "_" + (subVal)).text());
+					$('#usr_' + elem).attr("idxValue", subVal);
+					break;
 				case tvKey.KEY_ENTER:
-					$("#dropdown_" + elem).slideDown("slow");
-					userSettingKeyMaster = 'inDropdown';
-					dropdown = Number(elem);
-					subMenu = 0;
 					break;
 		        case tvKey.KEY_RETURN:
 					$("#settingPanel").slideUp();
 					keyDownMaster = 'outter';
+					var res = '';
+					//파일입출력...
+					for(var i = 1; i <= 5; i++){
+						res += $('#usr_' + i).text() + '|';
+						res += $('#usr_' + i).attr( "idxValue" ) + "|";
+					}
+					initAlertType($('#usr_1').text());
+					switch($('#usr_4').text()){
+					case '느림':
+						notiSpeed = 4;
+						break;
+					case '보통':
+						notiSpeed = 3;
+						break;
+					case '빠름':
+						notiSpeed = 1;
+						break;
+					}
+					if($('#usr_5').text() == '알림 중단')
+						notiStop = true;
+					else
+						notiStop = false;
+					write(res);
 					break;
-			}
-			break;
-		case 'inDropdown':
-			switch(keyCode){
-			case tvKey.KEY_DOWN:
-				$('#dropdown_' + dropdown + '_' + subMenu).removeClass('box_shadow');
-				subMenu += 1;
-				if(subMenu == elementNum[elem] + 1)
-					subMenu= 1;
-				$('#dropdown_' + dropdown + '_' + subMenu).addClass('box_shadow');
-				break;
-			case tvKey.KEY_UP:
-				$('#dropdown_' + dropdown + '_' + subMenu).removeClass('box_shadow');
-				subMenu -= 1;
-				if(subMenu == 0)
-					subMenu= elementNum[elem];
-				$('#dropdown_' + dropdown + '_' + subMenu).addClass('box_shadow');
-				break;
-			case tvKey.KEY_ENTER:
-				//아무것도 선택 안함? break;
-				if(subMenu == 0)
-					break;
-				$('#dropdown_' + dropdown + '_' + subMenu).removeClass('box_shadow');
-				$('#usr_' + elem).text($('#dropdown_' + dropdown + '_' + subMenu).text());
-				$("#dropdown_" + elem).slideUp();
-				subMenu = 0;
-				//state를 userSetting으로
-				userSettingKeyMaster = 'userSetting';
-				var res = '';
-				//파일입출력...
-				for(var i = 1; i <= 5; i++)
-					res += $('#usr_' + i).text() + '|';
-				initAlertType($('#usr_1').text());
-				write(res);
-				break;
 			}
 			break;
 		}
 }
+var notiStop = false;
 function disableAll(){
 	$("#icon1").hide();
 	$("#icon2").hide();
@@ -357,6 +435,10 @@ function disableAll(){
 	$("#mail2").hide();
 	$("#mail3").hide();
 	$("#mail4").hide();
+	$("#mail1Circle").hide();
+	$("#mail2Circle").hide();
+	$("#mail3Circle").hide();
+	$("#mail4Circle").hide();
 }
 
 function initAlertType(t){
@@ -448,13 +530,15 @@ var Convergence = {
     },
     registerDevice: function(sID, oDeviceInfo) {
     	//Device to TV, mesg 교환시 실행되는 부분...
+    	if(notiStop)
+    		return;
     	for(var key in oDeviceInfo.data){
     		alert(key + ' : ' + oDeviceInfo.data[key]);
     	}
     	var hi = jQuery.parseJSON(oDeviceInfo.data.message1);
 		var dt = new Date();
 		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-    	History.mesgq.push(time + '|' + hi.opcode + '|' + hi.nickname + '|' + hi.title.substr(0, 10) + '|' + hi.mesg.substr(0, 10));
+    	History.mesgq.push(time + '|' + hi.opcode.substr(0, 4) + '|' + hi.nickname + '|' + hi.title.substr(0, 10) + '|' + hi.mesg.substr(0, 11));
     	if(History.mesgq.length > 5)
     		$('#historyTableDiv').css("height", 77*(5 + 1));
     	else
@@ -506,7 +590,11 @@ function MailManager() {
 	/* public 변수 */
 	this.connectedUserList = new Array();
 	this.connectedUserCount = 0;
-	this.mailBox = new Array(4);
+	this.mailBox = new Array();
+	this.mailTempIdx = 0;
+	for(var i = 0; i < 4; i++){
+		this.mailBox[i] = new Array();
+	}
 	
 	/* private 변수 */
 	
@@ -522,20 +610,88 @@ function MailManager() {
 			initMails();
 			//등록맨
 		}
-		alert('gogo' + this.mailBox[this.connectedUserList[obj.nickname]].length);
 		if(this.mailBox[this.connectedUserList[obj.nickname]].length < 20){
 			this.mailBox[this.connectedUserList[obj.nickname]].push(obj);
+			alert(this.connectedUserList[obj.nickname] + 'pushed');
+			$("#mail"+this.connectedUserList[obj.nickname]).show();
 			$("#mail"+this.connectedUserList[obj.nickname]+"Circle").show().text(this.mailBox[this.connectedUserList[obj.nickname]].length);
-			alert("#mail"+this.connectedUserList[obj.nickname]+"Circle");
+			alert("#mail"+this.mailBox[this.connectedUserList[obj.nickname]].length+"Circle");
 		}
 	};
 	
 	this.showMessages = function(idx){
-		
+		mailMenuIn = 1;
+		userNo = idx;
+		$("#mail" + userNo).append('<div id="mailDummy' + this.mailTempIdx + '" style="position: absolute"></div>').removeClass('box_shadow2').text();
+		var dummy = $("#mailDummy" + this.mailTempIdx);
+		dummy.css('background-color', 'white').css('width', 200).css('height', 100).css('opacity', 0).text(mail.mailBox[userNo].shift().mesg).animate({
+			opacity: 1
+		}, 200);
+		this.mailTempIdx += 1;
+		$("#mail" + userNo + "Circle").text(this.mailBox[userNo].length);
+		if(mail.mailBox[userNo].length != 0){
+			setTimeout(this.r, 3000);
+			setTimeout(function(){
+				dummy.animate({
+					opacity: 0
+				}, 200);
+			}, 3000);
+		}else{
+			setTimeout(function(){
+				$("#mail"+userNo+"Circle").animate({
+					opacity: 0
+				}, 200);
+				setTimeout(function(){
+					$("#mail"+userNo+"Circle").css('opacity', 1);
+					mailMenuIn = 0;
+					mailInit();
+					isMailShowing = false;
+					$("#mail"+userNo).css('background-color', 'white');
+				}, 300);
+			}, 3000);
+		}
 	};
-	/* private 메서드 */
+	
+	this.r = function(){
+		var tmpObj = $("#mail" + userNo);
+		alert('idx' + mail.mailTempIdx);
+		tmpObj.append('<div id="mailDummy' + mail.mailTempIdx + '" style="position: absolute"></div>');
+		var dummy = $("#mailDummy" + mail.mailTempIdx);
+		dummy.css('background-color', 'white').css('width', 200).css('height', 100).css('opacity', 0).text(mail.mailBox[userNo].shift().mesg).animate({
+			opacity: 1
+		}, 200);
+		mail.mailTempIdx += 1;
+		$("#mail"+userNo+"Circle").text(mail.mailBox[userNo].length);
+		setTimeout(function(){
+			dummy.animate({
+				opacity: 0
+			}, 200, function(){
+				dummy.remove();
+			});
+		}, 3000);
+		if(mail.mailBox[userNo].length != 0){
+			setTimeout(mail.r, 3000);
+			setTimeout(function(){
+				initMails();
+			}, 3000);
+		}else{
+			setTimeout(function(){
+				$("#mail"+userNo+"Circle").animate({
+					opacity: 0
+				}, 200);
+				setTimeout(function(){
+					$("#mail"+userNo+"Circle").css('opacity', 1);
+					mailMenuIn = 0;
+					mailInit();
+					isMailShowing = false;
+					$("#mail"+userNo).css('background-color', 'white');
+				}, 300);
+			}, 3000);
+		}
+	};
 }
 
+var userNo;
 
 var icon = new IconManager();
 
@@ -574,9 +730,6 @@ function IconManager() {
 	};
 }
 
-
-
-
 var card = new CardManager();
 
 /* 클래스 선언 */
@@ -600,29 +753,38 @@ function CardManager() {
 	
 	/* private 메서드 */
 	var drawAppend = function(obj) {
+		var top;
+		switch($('#usr_3').text()){
+		case '상단':
+			top = 0;
+			break;
+		case '중단':
+			top = 640/2;
+			break;
+		default:
+			top = 640;
+			break;
+		}
 		//그려줘야함...
 		$('#card').append("<div id=\"instantCardAlert" + cardIndex + "\" style=\"position: absolute;\"></div>");
-		$("#instantCardAlert" + cardIndex).text(obj.nickname);
-		$("#instantCardAlert" + cardIndex).css('background-color', 'red');
-		$("#instantCardAlert" + cardIndex).css('width', 200);
-		$("#instantCardAlert" + cardIndex).css("left", 900);
-		$("#instantCardAlert" + cardIndex).css("top", 70 * screenShowCardNum);
-		$("#instantCardAlert" + cardIndex).css("height", 50);
+		$("#instantCardAlert" + cardIndex).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", 900).css("top", top * screenShowCardNum).css("height", 50);
 		setTimeout(function(){
+			alert('hi!');
 			dequeue();
-		}, 3000);
+		}, notiSpeed * 1000);
 		screenShowCardArray.push($('#instantCardAlert' + cardIndex));
 		screenShowCardNum += 1;
 		cardIndex += 1;
 	};
 	
 	var dequeue = function(){
+		alert('for Delete : '+cardVarDelete);
 		$("#instantCardAlert" + cardVarDelete).animate({
 			opacity: 0
-		}, 200, function(){
-			$("#instantCardAlert" + cardVarDelete).remove();
-			cardVarDelete += 1;
-		});
+		}, 200);
+		setTimeout(function(){
+			$("#instantCardAlert" + cardVarDelete++).remove();
+		}, 300);
 		screenShowCardArray.shift();
 		for(var i = 0; i < screenShowCardArray.length; i++){
 			screenShowCardArray[i].animate({ "top": "-=70px"}, 200, "linear");
@@ -639,22 +801,34 @@ var captionVar = 0;
 var captionVarDelete = 1;
 
 function makeCaption(obj){
+	var top;
+	switch($('#usr_3').text()){
+	case '상단':
+		top = 0;
+		break;
+	case '중단':
+		top = 640/2;
+		break;
+	default:
+		top = 640;
+		break;
+	}
 	if($('#instantCaptionAlert' + captionVar).width() == null || $('#instantCaptionAlert' + captionVar).offset().left + $("#instantCaptionAlert" + captionVar).width() < 1280){
 			//새로만들기
 		captionVar += 1;
 		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
 		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", 1280)
-			.css("top", 640).css("height", 50).animate({ "left": "-=1500px"}, 12000, "linear", function(){
+			.css("top", top).css("height", 50).animate({ "left": "-=1500px"}, 12000, "linear", function(){
 				$("#instantCaptionAlert" + captionVarDelete).remove();
 				captionVarDelete++;
-			} );
+			});
 	}else{
 		//$("#instantCaptionAlert" + captionVar).text($("#instantCaptionAlert" + captionVar).text() + obj.nickname);
 		captionVar += 1;
 		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
 		var lft = $("#instantCaptionAlert" + (captionVar-1)).offset().left + $("#instantCaptionAlert" + (captionVar-1)).width();
 		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", lft - 10)
-			.css("top", 640).css("height", 50).animate({ "left": "-=" + (lft + 220) + "px"}, (lft + 220)*8, "linear", function(){
+			.css("top", top).css("height", 50).animate({ "left": "-=" + (lft + 220) + "px"}, (lft + 220)*8, "linear", function(){
 				$("#instantCaptionAlert" + captionVarDelete).remove();
 				captionVarDelete++;
 			});
@@ -664,7 +838,7 @@ function makeCaption(obj){
 function requestToServer(authKey, regID, opcode, dummy){
 	var formData = "auth=" + authKey + '&opcode=' + opcode + '&smsNo=' + dummy + '&regID=' + regID;  //Name value Pair
 	$.ajax({
-	    url : "http://210.118.74.55:18080/sendMessage",
+	    rl : "http://210.118.74.55:18080/sendMessage",
 	    type: "POST",
 	    data : formData,
 	    success: function(data, textStatus, jqXHR) {
