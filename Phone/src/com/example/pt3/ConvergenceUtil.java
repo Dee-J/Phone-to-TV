@@ -81,7 +81,7 @@ public class ConvergenceUtil {
         try {
 			url = new URL(urlStr);
 		} catch (MalformedURLException e) {
-			Log.e("람딩이는 다이스키하다", urlStr);
+			Log.e("IP가 잘못 생성되었다", urlStr);
 			e.printStackTrace();
 		}
 
@@ -98,8 +98,8 @@ public class ConvergenceUtil {
 		message.addHeader("SLDeviceID", macAddress);
 		message.addHeader("VendorID", 	"VendorTV");
 		message.addHeader("ProductID", 	"SMARTdev");
-		message.addHeader("DeviceName", "SamsungGalaxyS4");
-		Log.i(TAG, "aaa");
+		message.addHeader("DeviceName", android.os.Build.PRODUCT);
+		
 		
 		try {
 			// TV로 연결요청 (HttpResponse 객체 반환)
@@ -116,12 +116,9 @@ public class ConvergenceUtil {
                     result = "[연결오류] 다시 시도해 주세요.";
                 }
 
-                Log.i(TAG, "connect() : statusCode = "+statusCode+"/result = "+result);
+                Log.i(TAG, "connect() : statusCode = "+statusCode);
 
-                if(result != null){
-                	Log.d("recv",result);
-			}
-			
+             
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

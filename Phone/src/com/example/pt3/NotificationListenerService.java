@@ -7,7 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -37,32 +39,18 @@ public class NotificationListenerService extends android.service.notification.No
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn)
 	{
+		
+		SharedPreferences pref = getSharedPreferences("PT",Context.MODE_PRIVATE);
+		if(pref.getBoolean("Activate", false)==false)return;	
+		Log.d("Activated","Activated");
+		String applicationName = getAppname(sbn);
+		
+		Log.d(sbn.getPackageName(),"banned: "+pref.getBoolean(sbn.getPackageName(),false));
+		if(pref.getBoolean(sbn.getPackageName(),false)==false&&!sbn.getPackageName().equals("com.android.phone"))return;
 		ArrayList<String> str= getText(sbn);
-		Log.d("get text ",str.toString());
+		JSONObject jobj=Converter.execute(str,applicationName,sbn.getPackageName(),getApplicationContext());
+		
 
-		JSONObject jobj = new JSONObject();
-		final PackageManager pm = getApplicationContext().getPackageManager();
-		ApplicationInfo ai;
-		try {
-			ai = pm.getApplicationInfo(sbn.getPackageName(), 0);
-		} catch (final NameNotFoundException e) {
-			ai = null;
-		}
-		final String applicationName = (String) (ai != null ? pm
-				.getApplicationLabel(ai) : "(unknown)");
-		Log.d("App Name", applicationName);
-		try {
-			jobj.put("opcode", applicationName);
-			jobj.put("title", str.get(0));
-			jobj.put("mesg", str.get(1));
-			jobj.put("nickname", "¹Ú¹üÂù");
-			jobj.put("color", "#FF08AB");
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
 		Intent i = new  Intent("com.example.pt3.TestBroadCastReceiver");
 
 		i.putExtra("message", jobj.toString());
@@ -119,9 +107,21 @@ public class NotificationListenerService extends android.service.notification.No
 	@Override
 	public void onNotificationRemoved(StatusBarNotification sbn)
 	{
-		Log.i("aa","removed");
 	}
 
+	private String getAppname(StatusBarNotification sbn){
+		final PackageManager pm = getApplicationContext().getPackageManager();
+		ApplicationInfo ai;
+		try {
+			ai = pm.getApplicationInfo(sbn.getPackageName(), 0);
+		} catch (final NameNotFoundException e) {
+			ai = null;
+		}
+		final String applicationName = (String) (ai != null ? pm
+				.getApplicationLabel(ai) : "(unknown)");
+		return applicationName;
+		
+	}
 
 	////
 

@@ -21,13 +21,18 @@ import org.teleal.cling.registry.DefaultRegistryListener;
 import org.teleal.cling.registry.Registry;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.net.NetworkInfo.DetailedState;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,13 +58,16 @@ public class BrowserActivity extends Fragment  {
 			// Refresh the list with all known devices
 			deviceListAdapter.clear();
 			for (Device device : upnpService.getRegistry().getDevices()) {
+
+			
 				registryListener.deviceAdded(device);
 			}
-
 			// Getting ready for future device advertisements
 			upnpService.getRegistry().addListener(registryListener);
 		}
 
+		
+		@Override
 		public void onServiceDisconnected(ComponentName className) {
 			upnpService = null;
 		}
@@ -73,7 +81,7 @@ public class BrowserActivity extends Fragment  {
 				new Intent(getActivity(), BrowserUpnpService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -85,26 +93,26 @@ public class BrowserActivity extends Fragment  {
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	
+
 		View view=inflater.inflate(R.layout.activity_browser, container, false);
-	
+
 		listview =(ListView)view.findViewById(R.id.list);
-			
-	
+
+
 		switchToDeviceList();
 
-	
-		
+
+
 		return view;
 
 	}
 
-	  @Override
-	    public void onAttach(Activity activity) {
-	        super.onAttach(activity);
-	 	    }
-	  
-	  
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+	}
+
+
 	public void switchToDeviceList() {
 		listview.setAdapter(deviceListAdapter);
 
@@ -134,9 +142,7 @@ public class BrowserActivity extends Fragment  {
 		super.onDestroy();
 
 
-
 	}
-
 	protected class BrowseRegistryListener extends DefaultRegistryListener {
 
 		/* Discovery performance optimization for very slow Android devices! */
@@ -205,9 +211,6 @@ public class BrowserActivity extends Fragment  {
 						deviceListAdapter.add(d);
 					}
 
-					// Sort it?
-					// listAdapter.sort(DISPLAY_COMPARATOR);
-					// listAdapter.notifyDataSetChanged();
 				}
 			});
 		}
@@ -302,14 +305,13 @@ public class BrowserActivity extends Fragment  {
 
 							if (appurl == null)
 								return;
-
-							mConvergenceUtil.setIpAddress(appurl);
-//							getActivity().unbindService(serviceConnection);
-//							upnpService.getRegistry().removeListener(registryListener);
-//							SharedPreferences pref = getSharedPreferences("MySettings", MODE_PRIVATE);
-//							Editor editor =pref.edit();
-//							editor.putString("appURL", appurl);
-//							editor.commit();
+							getActivity().unbindService(serviceConnection);
+							upnpService.getRegistry().removeListener(registryListener);
+							SharedPreferences pref = getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
+							Editor editor =pref.edit();
+							editor.putString("wifi",getWifiName(getActivity()));
+							editor.putString("appURL", appurl);
+							editor.commit();
 						}	
 					}
 							).start();
@@ -326,5 +328,17 @@ public class BrowserActivity extends Fragment  {
 		t.start();
 
 	}
-
+	public String getWifiName(Context context) {
+		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		if (manager.isWifiEnabled()) {
+			WifiInfo wifiInfo = manager.getConnectionInfo();
+			if (wifiInfo != null) {
+				DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
+				if (state == DetailedState.CONNECTED || state == DetailedState.OBTAINING_IPADDR) {
+					return wifiInfo.getSSID();
+				}
+			}
+		}
+		return null;
+	}
 }

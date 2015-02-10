@@ -31,7 +31,7 @@ public class NotificatonTestActivity extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				NotificationManager mNotificationManager = (NotificationManager)getActivity().getSystemService( Context.NOTIFICATION_SERVICE);
+				NotificationManager mNotificationManager = (NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 				NotificationCompat.Builder mBuilder =
 					    new NotificationCompat.Builder(getActivity())
 					    .setSmallIcon(R.drawable.notification_icon)
@@ -40,6 +40,7 @@ public class NotificatonTestActivity extends Fragment {
 					    .setTicker("PT 테스트알림");
 				Notification notification = mBuilder.build();
 				notification.flags|= Notification.FLAG_AUTO_CANCEL;
+				
 				mNotificationManager.notify((int) (Math.random()/100), mBuilder.build());
 			}
 		});

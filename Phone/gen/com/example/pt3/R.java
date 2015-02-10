@@ -21,21 +21,25 @@ public final class R {
     }
     public static final class id {
         public static final int activate=0x7f06000a;
+        public static final int activateswitch=0x7f060000;
+        public static final int activatetextView=0x7f060001;
         public static final int app_setting=0x7f060009;
         public static final int applist=0x7f060002;
-        public static final int checkBox1=0x7f06000f;
+        public static final int checkBox1=0x7f060013;
+        public static final int colorpickerText=0x7f06000e;
         public static final int device_setting=0x7f060008;
-        public static final int editText1=0x7f06000c;
-        public static final int imageView1=0x7f06000e;
+        public static final int imageView1=0x7f060012;
         public static final int list=0x7f060003;
         public static final int menuIcon=0x7f060004;
+        public static final int nickedittext=0x7f06000d;
         public static final int nickname=0x7f060005;
+        public static final int nicktextview=0x7f06000c;
         public static final int pager=0x7f06000b;
         public static final int privacy=0x7f060007;
-        public static final int switch1=0x7f060000;
+        public static final int privacyswitch=0x7f060010;
+        public static final int privacytextView=0x7f060011;
         public static final int testNoti=0x7f060006;
-        public static final int testnotibutton=0x7f06000d;
-        public static final int textView1=0x7f060001;
+        public static final int testnotibutton=0x7f06000f;
     }
     public static final class layout {
         public static final int activity_activate=0x7f030000;
