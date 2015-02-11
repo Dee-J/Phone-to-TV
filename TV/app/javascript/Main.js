@@ -1,3 +1,10 @@
+Array.prototype.removeElement = function(index)
+{
+	this.splice(index,1);
+	return this;
+};
+//for array delete(prototype);
+
 var elem = 0;
 var tvKey = new Common.API.TVKeyValue();
 var widgetAPI = new Common.API.Widget();
@@ -45,19 +52,31 @@ Main.onLoad = function()
 	$("#icon3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1090+100).css("top", 20).hide();
 	$("#TvToPhonePanel").hide();
 	mailInit();
+	mailHide();
 	iconInit();
 };
 
 function mailInit(){
-	$("#mail1").css('width', 25).css("height", 70).css("left", 1260).css("top", 20).hide();
-	$("#mail2").css('width', 25).css("height", 70).css("left", 1260).css("top", 60 + 45*2).hide();
-	$("#mail3").css('width', 25).css("height", 70).css("left", 1260).css("top", 100 + 45*3).hide();
-	$("#mail4").css('width', 25).css("height", 70).css("left", 1260).css("top", 140 + 45*4).hide();
-	$("#mail1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 10).hide();
-	$("#mail2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 50 + 45*2).hide();
-	$("#mail3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 90 + 45*3).hide();
-	$("#mail4Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1250).css("top", 130 + 45*4).hide();
+	$("#mail1").css('width', 430).css("height", 160).css("left", 1250).css("top", 20);
+	$("#mail2").css('width', 430).css("height", 160).css("left", 1250).css("top", 20 + 156);
+	$("#mail3").css('width', 430).css("height", 160).css("left", 1250).css("top", 20 + 156*2);
+	$("#mail4").css('width', 430).css("height", 160).css("left", 1250).css("top", 20 + 156*3);
+	$("#mail1Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1245).css("top", 15);
+	$("#mail2Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1245).css("top", 15 + 156);
+	$("#mail3Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1245).css("top", 15 + 156*2);
+	$("#mail4Circle").css('font-size', '18px').css('width', 25).css("height", 25).css("left", 1245).css("top", 15 + 156*3);
 }
+
+function mailHide(){
+	$("#mail1").hide();
+	$("#mail2").hide();
+	$("#mail3").hide();
+	$("#mail4").hide();
+	$("#mail1Circle").hide();
+	$("#mail2Circle").hide();
+	$("#mail3Circle").hide();
+	$("#mail4Circle").hide();
+} 
 
 function iconInit(){
 	for(var i = 1; i < 4; i++)
@@ -169,7 +188,6 @@ Main.keyDown = function(){
 		break;
 	}
 	
-	
 	//unregister 처리
 	switch(keyCode){
 	case tvKey.KEY_RETURN:
@@ -184,7 +202,7 @@ Main.keyDown = function(){
 	}
 };
 
-var ttppIdxer = 0;
+var ttppIdxer = -1;
 var ttppInIdxer = 0;
 var ttppMenuIn = false;
 
@@ -198,20 +216,21 @@ function ttppKeyDown(key){
 	    case tvKey.KEY_DOWN:
 			$('#userDropdown_' + ttppInIdxer).removeClass('box_shadow');
 			ttppInIdxer += 1;
-			if(ttppInIdxer == 3 + 1)
+			if(ttppInIdxer == 4 + 1)
 				ttppInIdxer = 1;
 			alert(ttppInIdxer + ' ttpp');
 	    	$('#userDropdown_' + ttppInIdxer).addClass('box_shadow');
 	    	break;
 	    case tvKey.KEY_UP:
 			$('#userDropdown_' + ttppInIdxer).removeClass('box_shadow');
-			if(ttppInIdxer == 0)
-				ttppInIdxer = 4;
+			if(ttppInIdxer == 1)
+				ttppInIdxer = 5;
 			ttppInIdxer -= 1;
 			alert(ttppInIdxer + ' ttpp');
 	    	$('#userDropdown_' + ttppInIdxer).addClass('box_shadow');
 	    	break;
-	    case tvKey.ENTER:
+	    case tvKey.KEY_ENTER:
+	    	alert(ttppInIdxer + 'ttppInIdxer');
 	    	switch(ttppInIdxer){
 	    	case 1:
 		    	requestToServer(authKey, regID, 'sound', dummy);
@@ -221,6 +240,12 @@ function ttppKeyDown(key){
 	    		break;
 	    	case 3:
 		    	requestToServer(authKey, regID, 'silent', dummy);
+	    		break;
+	    	case 4:
+	    		ttppDelete(ttppIdxer);
+		    	$('#userTableDropdown').slideUp();
+		    	ttppMenuIn = false;
+		    	ttppIdxer = -1;
 	    		break;
 	    	}
 	    	break;
@@ -244,7 +269,7 @@ function ttppKeyDown(key){
 	    case tvKey.KEY_UP:
 			$('#ttppScroll_' + ttppIdxer + '_1').removeClass('box_shadow');
 			$('#ttppScroll_' + ttppIdxer + '_2').removeClass('box_shadow');
-			if(ttppIdxer == 0)
+			if(ttppIdxer == 0 || ttppIdxer == -1)
 				ttppIdxer = ttppQ.length;
 			ttppIdxer -= 1;
 			alert(ttppIdxer + ' ttpp');
@@ -391,12 +416,15 @@ function mailKeyDown(key){
 }
 
 function showMail(){
+	if(Number($("#mail"+mailIndex+"Circle").text()) == 0)
+		return;
 	isMailShowing = true;
-	$('#mail' + mailIndex).animate({"left": "-=300px"}, 1000, "swing", function(){
+	$('#mail' + mailIndex).animate({"left": "-=410px"}, 1000, "swing", function(){
 		mail.showMessages(mailIndex);
 		$(this).css('background-color', '');
+		$('#tmpMail' + mailIndex).hide();
 	});
-	$('#mail' + mailIndex + "Circle").animate({"left": "-=300px"}, 1000);
+	$('#mail' + mailIndex + "Circle").animate({"left": "-=410px"}, 1000);
 }
 
 var iconIsMenuIn = 0;
@@ -439,9 +467,27 @@ function iconKeyDown(key){
 		}
 	}
 }
+var iconTmp = 0;
+
+function showIconRecursive(){
+	iconTmp = iconNotiIdxQ;
+	$("#iconNoti" + iconTmp).animate({
+		opacity: 0
+	}, 200, function(){
+		$("#iconNoti" + iconTmp).remove();
+	});
+	iconNotiIdxQ += 1;
+	if(iconNotiIdxQ != iconNotiIdx)
+		setTimeout(showIconRecursive, notiSpeed*1000);
+	else{
+    	iconIsMenuIn = 0;
+    	hideIconMenu();
+	}
+}
 
 function showIconMenu(){
 	$("#iconInner" + iconIndex).slideDown();
+	setTimeout(showIconRecursive, notiSpeed*1000);
 }
 function hideIconMenu(){
 	$("#iconInner" + iconIndex).slideUp();
@@ -521,6 +567,9 @@ function disableAll(){
 	$("#icon1").hide();
 	$("#icon2").hide();
 	$("#icon3").hide();
+	$("#icon1Circle").hide();
+	$("#icon2Circle").hide();
+	$("#icon3Circle").hide();
 	$("#mail1").hide();
 	$("#mail2").hide();
 	$("#mail3").hide();
@@ -599,16 +648,31 @@ function ttppPush(obj){
 			return;
 	}
 	userList.push(obj.nickname);
+	ttppQ.push(obj);
+	var result = '';
 	var dt = new Date();
 	var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-	var su = '<tr id="ttppScroll' + ttppIdx + '">' + '<td id="ttppScroll_'+ttppIdx+'_1" style="width:40%;">' + time + '</td><td id="ttppScroll_'+ttppIdx+'_2" style="width: 60%;">'
-	+ obj.nickname + '</td></tr>';
-	ttppQ.push(su);
-	var result = '';
 	for(var i = 0; i < ttppQ.length; i++)
-		result += ttppQ[i];
+		result += '<tr id="ttppScroll' + i + '">' + '<td id="ttppScroll_'+i+'_1" style="width:40%;">' + time + '</td><td id="ttppScroll_'+i+'_2" style="width: 60%;">'
+			+ ttppQ[i].nickname + '</td></tr>';
 	$('#userTable').html(result);
 	ttppIdx += 1;
+}
+
+function ttppDelete(idx){
+	alert(idx + 'ttppDelete!');
+	ttppQ.removeElement(idx);
+	userList.removeElement(idx);
+	ttppIdx -= 1;
+	var result = '';
+	var dt = new Date();
+	var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+	for(var i = 0; i < ttppQ.length; i++)
+		result += '<tr id="ttppScroll' + i + '">' + '<td id="ttppScroll_'+i+'_1" style="width:40%;">' + time + '</td><td id="ttppScroll_'+i+'_2" style="width: 60%;">'
+			+ ttppQ[i].nickname + '</td></tr>';
+	$('#userTable').html(result);
+	ttppIdx -= 1;
+	mail.mailUserDelete(idx);
 }
 
 var Convergence = {
@@ -729,6 +793,8 @@ function MailManager() {
 		}
 		if(this.mailBox[this.connectedUserList[obj.nickname]].length < 20){
 			this.mailBox[this.connectedUserList[obj.nickname]].push(obj);
+			$("#tmpMailCk" + (this.connectedUserList[obj.nickname])).css('background', obj.color);
+			$("#tmpMailCo" + (this.connectedUserList[obj.nickname])).css('background', obj.color);
 			alert(this.connectedUserList[obj.nickname] + 'pushed');
 			$("#mail"+this.connectedUserList[obj.nickname]).show();
 			$("#mail"+this.connectedUserList[obj.nickname]+"Circle").show().text(this.mailBox[this.connectedUserList[obj.nickname]].length);
@@ -741,7 +807,10 @@ function MailManager() {
 		userNo = idx;
 		$("#mail" + userNo).append('<div id="mailDummy' + this.mailTempIdx + '" style="position: absolute"></div>').removeClass('box_shadow2').text();
 		var dummy = $("#mailDummy" + this.mailTempIdx);
-		dummy.css('background-color', 'white').css('width', 200).css('height', 100).css('opacity', 0).text(mail.mailBox[userNo].shift().mesg).animate({
+		var obj = mail.mailBox[userNo].shift();
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+		dummy.css('width', 200).css('height', 100).css('opacity', 0).html('<div id="mailNoti" class="non_box_shadow2"><table width="420px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"></td><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"><img src="./images/twitter.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'+obj.opcode+'</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.title+'</td></tr><tr><td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.mesg+'</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'+obj.title+' / '+time+'</td></tr></table></div>').animate({
 			opacity: 1
 		}, 200);
 		this.mailTempIdx += 1;
@@ -752,7 +821,7 @@ function MailManager() {
 				dummy.animate({
 					opacity: 0
 				}, 200);
-			}, 3000);
+			}, notiSpeed*1000);
 		}else{
 			setTimeout(function(){
 				$("#mail"+userNo+"Circle").animate({
@@ -763,9 +832,9 @@ function MailManager() {
 					mailMenuIn = 0;
 					mailInit();
 					isMailShowing = false;
-					$("#mail"+userNo).css('background-color', 'white');
+					$("#mail"+userNo).css('opacity', 1);
 				}, 300);
-			}, 3000);
+			}, notiSpeed*1000);
 		}
 	};
 	
@@ -774,7 +843,10 @@ function MailManager() {
 		alert('idx' + mail.mailTempIdx);
 		tmpObj.append('<div id="mailDummy' + mail.mailTempIdx + '" style="position: absolute"></div>');
 		var dummy = $("#mailDummy" + mail.mailTempIdx);
-		dummy.css('background-color', 'white').css('width', 200).css('height', 100).css('opacity', 0).text(mail.mailBox[userNo].shift().mesg).animate({
+		var obj = mail.mailBox[userNo].shift();
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+		dummy.css('width', 200).css('height', 100).css('opacity', 0).html('<div id="mailNoti" class="non_box_shadow2"><table width="420px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"></td><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"><img src="./images/twitter.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'+obj.opcode+'</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.title+'</td></tr><tr><td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.mesg+'</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'+obj.nickname+' / '+time+'</td></tr></table></div>').animate({
 			opacity: 1
 		}, 200);
 		mail.mailTempIdx += 1;
@@ -785,12 +857,12 @@ function MailManager() {
 			}, 200, function(){
 				dummy.remove();
 			});
-		}, 3000);
+		}, notiSpeed*1000);
 		if(mail.mailBox[userNo].length != 0){
 			setTimeout(mail.r, 3000);
 			setTimeout(function(){
 				initMails();
-			}, 3000);
+			}, notiSpeed*1000);
 		}else{
 			setTimeout(function(){
 				$("#mail"+userNo+"Circle").animate({
@@ -801,11 +873,37 @@ function MailManager() {
 					mailMenuIn = 0;
 					mailInit();
 					isMailShowing = false;
-					$("#mail"+userNo).css('background-color', 'white');
+					$('#tmpMail' + userNo).show();
+					$('#tmpMail' + userNo).css('opacity', 1);
 				}, 300);
-			}, 3000);
+			}, notiSpeed*1000);
 		}
 	};
+	this.mailUserDelete = function (idx){
+		alert('delete process!' + this.connectedUserList.length);
+		alert(idx + ' ' + this.connectedUserList[idx+1]);
+		$('#mail' + (idx+1)).hide();
+		$('#mail' + (idx+1)+'Circle').hide();
+		this.connectedUserList.removeElement(idx+1);
+		this.connectedUserCount--;
+		this.mailBox.removeElement(idx+1);
+		alert('delete complete' + this.connectedUserList.length);
+		mailInit();
+		mailHide();
+		for(var i = 1; i < this.connectedUserList.length; i++){
+			this.connectedUserList[i] = this.connectedUserList[i];
+			this.connectedUserList[this.connectedUserList[i]] = i;
+			$("#tmpMailCk" + (i)).css('background', this.mailBox[i].color);
+			$("#tmpMailCo" + (i)).css('background', this.mailBox[i].color);
+			$("#mail"+i).show();
+			$("#mail"+i+"Circle").show().text(this.mailBox[i].length);
+			alert("#mail"+this.mailBox[i].length+"Circle");
+		}
+		alert('complete!!!!!!!!@#$!@#$%!@#%@!%!@#%!@%#$%$#@%@#$%@#$%');
+	};
+	this.initAll = function(){
+		
+	}
 }
 
 var userNo;
@@ -842,10 +940,15 @@ function IconManager() {
 	this.pushNoti = function(obj) {
 		//그려줘야함...
 		this.notiNum += 1;
-		$('#iconInner3').append("<div>" + obj.nickname + "</div>");
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+		$('#iconInner3').append('<div id="iconNoti'+iconNotiIdx+'"><table width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"><img src="./images/line.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'+obj.opcode+'</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.title+'</td></tr><tr><td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.mesg.substr(0, 32)+'</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'+obj.nickname+' / '+time+'</td></tr></table></div>');
 		$("#icon3Circle").show().text(this.notiNum);
+		iconNotiIdx++;
 	};
 }
+var iconNotiIdx = 0;
+var iconNotiIdxQ = 0;
 
 var card = new CardManager();
 
@@ -862,31 +965,22 @@ function CardManager() {
 	
 	/* public 메서드 */
 	this.push_back = function (obj) {
-		if(screenShowCardNum == 5)
+		if(screenShowCardNum == 3)
 			readyQueue.push(obj);
 		else
 			drawAppend(obj);
 	};
-	
+	 
 	/* private 메서드 */
 	var drawAppend = function(obj) {
-		var top;
-		switch($('#usr_3').text()){
-		case '상단':
-			top = 0;
-			break;
-		case '중단':
-			top = 640/2;
-			break;
-		default:
-			top = 640;
-			break;
-		}
+		var top = 0;
 		//그려줘야함...
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
 		$('#card').append("<div id=\"instantCardAlert" + cardIndex + "\" style=\"position: absolute;\"></div>");
-		$("#instantCardAlert" + cardIndex).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", 900).css("top", top * screenShowCardNum).css("height", 50);
+		$("#instantCardAlert" + cardIndex).html('<div id="cardNoti"><table width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"><img src="./images/line.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'+obj.opcode+'</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.title+'</td></tr><tr><td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'+obj.mesg.substr(0, 32)+'</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'+obj.nickname+' / '+time+'</td></tr></table></div>')
+		.css("left", 800).css("top", (top + screenShowCardNum*160)).css("height", 50);
 		setTimeout(function(){
-			alert('hi!');
 			dequeue();
 		}, notiSpeed * 1000);
 		screenShowCardArray.push($('#instantCardAlert' + cardIndex));
@@ -904,7 +998,7 @@ function CardManager() {
 		}, 300);
 		screenShowCardArray.shift();
 		for(var i = 0; i < screenShowCardArray.length; i++){
-			screenShowCardArray[i].animate({ "top": "-=70px"}, 200, "linear");
+			screenShowCardArray[i].animate({ "top": "-=160px"}, 200, "linear");
 		}
 		screenShowCardNum -= 1;
 		if(readyQueue.length != 0){
@@ -924,28 +1018,33 @@ function makeCaption(obj){
 		top = 0;
 		break;
 	case '중단':
-		top = 640/2;
+		top = 580/2;
 		break;
 	default:
-		top = 640;
+		top = 580;
 		break;
 	}
 	if($('#instantCaptionAlert' + captionVar).width() == null || $('#instantCaptionAlert' + captionVar).offset().left + $("#instantCaptionAlert" + captionVar).width() < 1280){
-			//새로만들기
+		//새로만들기
 		captionVar += 1;
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
 		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
-		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", 1280)
-			.css("top", top).css("height", 50).animate({ "left": "-=1500px"}, 12000, "linear", function(){
-				$("#instantCaptionAlert" + captionVarDelete).remove();
-				captionVarDelete++;
-			});
+		$("#instantCaptionAlert" + captionVar).html('<table width="1280" height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"><img src="./images/kakao.png" width="100px" height="100px" align="middle"></td><td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">'+obj.title+'</td><td id="mesg" width="980px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">'+obj.mesg+'</td></tr><tr><td id="nickname" colspan="2" height="20px" width="980px" style="margin : 0px; border: 0px; padding:0px; font-size:15px;text-align:right;">'+obj.nickname+' / ' + time + '</td></tr></table>').css("left", 0).css('width', 1280).css('top', 600);
+		
+		$("#instantCaptionAlert" + captionVar).css("left", 1280).css('width', 1280).css('top', top).animate({ "left": "-=3000px"}, 12000, "linear", function(){
+			$("#instantCaptionAlert" + captionVarDelete).remove();
+			captionVarDelete++;
+		});
 	}else{
-		//$("#instantCaptionAlert" + captionVar).text($("#instantCaptionAlert" + captionVar).text() + obj.nickname);
+		//갖다붙이기
 		captionVar += 1;
 		$("#caption").append("<div id=\"instantCaptionAlert" + captionVar + "\" style=\"position: absolute;\"></div>");
 		var lft = $("#instantCaptionAlert" + (captionVar-1)).offset().left + $("#instantCaptionAlert" + (captionVar-1)).width();
-		$("#instantCaptionAlert" + captionVar).text(obj.nickname).css('background-color', 'red').css('width', 200).css("left", lft - 10)
-			.css("top", top).css("height", 50).animate({ "left": "-=" + (lft + 220) + "px"}, (lft + 220)*8, "linear", function(){
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+		$("#instantCaptionAlert" + captionVar).html('<table width="1280" height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:'+obj.color+'"><img src="./images/kakao.png" width="100px" height="100px" align="middle"></td><td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">'+obj.title+'</td><td id="mesg" width="980px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">'+obj.mesg+'</td></tr><tr><td id="nickname" colspan="2" height="20px" width="980px" style="margin : 0px; border: 0px; padding:0px; font-size:15px;text-align:right;">'+obj.nickname+' / ' + time + '</td></tr></table>').css("left", lft - 10).css('width', 1280).css('top', top)
+		.animate({ "left": "-=" + (lft+1720) + "px"}, (lft + 1720)*4, "linear", function(){
 				$("#instantCaptionAlert" + captionVarDelete).remove();
 				captionVarDelete++;
 			});
@@ -978,7 +1077,3 @@ var handleMobileEvent = function(event){
 			break;
 	}
 };
-
-function connectedUsers(){
-	
-}

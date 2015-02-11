@@ -1,0 +1,314 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>UI</title> 
+  <link rel="stylesheet" href="app/stylesheets/Main.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="app/stylesheets/theme.css" />
+  <style>
+  </style>
+  <script>  
+  </script>
+</head>
+<body>
+<!--------------------------------자막형 UI ---------------------------------->
+<div id="subtitleCall">
+	<table width='1280' height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:#EF4089">
+				<img src="./images/call.png" width="100px" height="100px" align="middle">
+			</td>
+			<td id="sender" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">
+				소멤 광보이
+			</td>
+			<td width="930px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">
+				전 화  왔 습 니 다 ~ !
+			</td>
+			<td id="response" width="50px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">
+				▼
+			</td>
+		</tr>
+		<tr>
+			<td id="pno" width="200px" height="20px" style="margin : 0px; border: 0px; padding: 0px; font-size:20px;text-align:center;">
+				010-0000-0000
+			</td>
+			<td id="nickname" colspan="2" height="20px" width="980px" style="margin : 0px; border: 0px; padding:0px; font-size:15px;text-align:right;">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>		
+	</table>
+</div>
+
+<div id="subtitleSMS">
+	<table width='1280' height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:#19BDC4">
+				<img src="./images/sms.png" width="100px" height="100px" align="middle">
+			</td>
+			<td id="sender" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">
+				소멤 광보이
+			</td>
+			<td id="mesg" width="980px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">
+				문자 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.
+			</td>			
+		</tr>
+		<tr>
+			<td id="pno" width="200px" height="20px" style="margin : 0px; border: 0px; padding: 0px; font-size:20px;text-align:center;">
+				010-0000-0000
+			</td>
+			<td id="nickname" colspan="2" height="20px" width="980px" style="margin : 0px; border: 0px; padding:0px; font-size:15px;text-align:right;">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>		
+	</table>
+</div>
+
+<div id="subtitleNoti">
+	<table width='1280' height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:#0C274C">
+				<img src="./images/kakao.png" width="100px" height="100px" align="middle">
+			</td>
+			<td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">
+				소멤 광보이
+			</td>
+			<td id="mesg" width="980px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">
+				기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.
+			</td>			
+		</tr>
+		<tr>		
+			<td id="nickname" colspan="2" height="20px" width="980px" style="margin : 0px; border: 0px; padding:0px; font-size:15px;text-align:right;">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>		
+	</table>
+</div>
+
+
+<!--------------------------------카드형 UI ---------------------------------->
+<div id="cardCall">
+		<table width='400px' height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#EF4089">				
+				<img src="./images/call.png" width="150px" height="150px" align="middle">
+			</td>
+			<td id="sender" colspan="2" width="250px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				소멤 광보이
+			</td>			
+		</tr>
+		<tr>
+			<td id="pno" colspan="2" width="250px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;text-align:center;">
+				010-0000-0000
+			</td>
+		</tr>
+		<tr>
+			<td width="225px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;text-align:center;">
+				전화 왔습니다~!
+			</td>
+			<td id="response" width="25px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				▼
+			</td>
+		</tr>
+		<tr>
+			<td id="nickname" colspan="2" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>			
+	</table>
+</div>
+
+<div id="cardSMS">
+		<table width='400px' height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#19BDC4">				
+				<img src="./images/sms.png" width="150px" height="150px" align="middle">
+			</td>
+			<td id="sender" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				소멤 광보이
+			</td>			
+		</tr>
+		<tr>
+			<td id="pno" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				010-0000-0000
+			</td>
+		</tr>
+		<tr>
+			<td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				문자 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.
+			</td>			
+		</tr>
+		<tr>
+			<td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>			
+	</table>
+</div>
+
+<div id="cardNoti">
+		<table width='400px' height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#0C274C">				
+				<img src="./images/line.png" width="150px" height="150px" align="middle">
+			</td>
+			<td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				카카오톡
+			</td>			
+		</tr>
+		<tr>
+			<td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				소멤 광보이
+			</td>
+		</tr>
+		<tr>
+			<td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.
+			</td>			
+		</tr>
+		<tr>
+			<td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>			
+	</table>
+</div>
+
+
+<!--------------------------------메일함형 UI ---------------------------------->
+<div id="mailCall">
+		<table width='420px' height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#EF4089">				
+			</td>
+			<td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#EF4089">				
+				<img src="./images/call.png" width="150px" height="150px" align="middle">
+			</td>
+			<td id="sender" colspan="2" width="250px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				소멤 광보이
+			</td>			
+		</tr>
+		<tr>
+			<td id="pno" colspan="2" width="250px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;text-align:center;">
+				010-0000-0000
+			</td>
+		</tr>
+		<tr>
+			<td width="225px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;text-align:center;">
+				전화 왔습니다~!
+			</td>
+			<td id="response" width="25px" height="43px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				▼
+			</td>
+		</tr>
+		<tr>
+			<td id="nickname" colspan="2" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>			
+	</table>
+</div>
+
+<div id="mailSMS">
+		<table width='420px' height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#19BDC4">				
+			</td>
+			<td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#19BDC4">				
+				<img src="./images/sms.png" width="150px" height="150px" align="middle">
+			</td>
+			<td id="sender" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				소멤 광보이
+			</td>			
+		</tr>
+		<tr>
+			<td id="pno" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				010-0000-0000
+			</td>
+		</tr>
+		<tr>
+			<td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				문자 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.
+			</td>			
+		</tr>
+		<tr>
+			<td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>			
+	</table>
+</div>
+
+<div id="mailNoti">
+		<table width='420px' height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#0C274C">				
+			</td>
+			<td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:#0C274C">				
+				<img src="./images/twitter.png" width="150px" height="150px" align="middle">
+			</td>
+			<td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">
+				카카오톡
+			</td>			
+		</tr>
+		<tr>
+			<td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				소멤 광보이
+			</td>
+		</tr>
+		<tr>
+			<td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">
+				기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.
+			</td>			
+		</tr>
+		<tr>
+			<td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">
+				최동진 / 2015.02.11 오후 10:15
+			</td>
+		</tr>			
+	</table>
+</div>
+
+<!--------------------------------아이콘형 UI ---------------------------------->
+<div id="iconUI">
+	<table width='300px' height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
+		<tr>
+			<td id="iconCall"style="margin: 0px; border: 0px; padding: 0px;text-align: center;">
+				<div style="position : relative">
+					<div id="circle" width='25px' height='25px' style="position : absolute; margin-left:70px; background: url(./images/red2.png);background-size: 25px 25px;background-repeat: no-repeat;">	
+						10
+					</div>		
+					<img src="./images/folderCall2.png" width='80px' height="80px" align="middle">
+										
+				</div>
+			</td>
+			<td id="iconSMS" style="margin: 0px; border: 0px; padding: 0px;">
+				<div style="position : relative">
+					<div style="position : absolute; margin-left:70px; opacity: 0.8;">
+						<img src="./images/red2.png" width='25px' height="25px">						
+					</div>
+					<img src="./images/folderSMS2.png" width='80px' height="80px" align="middle">
+										
+				</div>
+			</td>
+			<td id="iconNoti" style="margin: 0px; border: 0px; padding: 0px;">
+				<div style="position : relative">
+					<div style="position : absolute; margin-left:70px; opacity: 0.8;">
+						<img src="./images/red2.png" width='25px' height="25px">						
+					</div>
+					<img src="./images/folderNoti2.png" width='80px' height="80px" align="middle">
+										
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+
+
+ 
+ 
+</body>
+</html>
