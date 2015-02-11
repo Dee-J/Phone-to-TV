@@ -15,8 +15,8 @@
 
         <Button
             android:id="@+id/nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/tab_selector"
             android:text="사용자\n설정"
@@ -25,8 +25,8 @@
 
         <Button
             android:id="@+id/testNoti"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/tab_selector"
             android:text="연결\n확인"
@@ -35,8 +35,8 @@
 
         <Button
             android:id="@+id/privacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/tab_selector"
             android:text="사생활\n보호"
@@ -45,8 +45,8 @@
 
         <Button
             android:id="@+id/device_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="연결\n설정" 
             android:textColor="@drawable/tab_text_selector"
@@ -54,8 +54,8 @@
                    android:textSize="20sp"/>
         <Button
             android:id="@+id/app_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="어플\n리스트"
             android:textColor="@drawable/tab_text_selector"
@@ -63,20 +63,31 @@
                    android:textSize="20sp" />
         <Button
             android:id="@+id/activate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="활성화\n"
+            android:text="활성화"
             android:textColor="@drawable/tab_text_selector"
             android:background="@drawable/tab_selector"
                    android:textSize="20sp" />
     </LinearLayout>
-    
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:requiresFadingEdge="horizontal" 
-          android:layout_below="@id/menuIcon" />
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/menuIcon"
+        android:requiresFadingEdge="horizontal" >
+    </android.support.v4.view.ViewPager>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/ViewPager01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/menuIcon"
+        android:requiresFadingEdge="horizontal" >
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

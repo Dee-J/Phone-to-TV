@@ -227,6 +227,9 @@ public class ColorPickerView extends View {
 	}
 
 	private void drawSatValPanel(Canvas canvas){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+		    setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 
 		final RectF	rect = mSatValRect;
 
@@ -235,10 +238,10 @@ public class ColorPickerView extends View {
 			canvas.drawRect(mDrawingRect.left, mDrawingRect.top, rect.right + BORDER_WIDTH_PX, rect.bottom + BORDER_WIDTH_PX, mBorderPaint);
 		}
 
-		if (mValShader == null) {
+		
 			mValShader = new LinearGradient(rect.left, rect.top, rect.left, rect.bottom,
 					0xffffffff, 0xff000000, TileMode.CLAMP);
-		}
+		
 
 		int rgb = Color.HSVToColor(new float[]{mHue,1f,1f});
 
@@ -290,7 +293,7 @@ public class ColorPickerView extends View {
 		r.bottom = p.y + rectHeight;
 
 
-		canvas.drawRoundRect(r, 2, 2, mHueTrackerPaint);
+		canvas.drawRoundRect(r, 10, 10, mHueTrackerPaint);
 
 	}
 
@@ -323,19 +326,6 @@ public class ColorPickerView extends View {
 		return p;
 	}
 
-	private Point alphaToPoint(int alpha){
-
-		final RectF rect = mAlphaRect;
-		final float width = rect.width();
-
-		Point p = new Point();
-
-		p.x = (int) (width - (alpha * width / 0xff) + rect.left);
-		p.y = (int) rect.top;
-
-		return p;
-
-	}
 
 	private float[] pointToSatVal(float x, float y){
 
@@ -469,29 +459,7 @@ public class ColorPickerView extends View {
 
 				break;
 
-			case PANEL_ALPHA:
 
-				if(!mShowAlphaPanel || mAlphaRect == null){
-					update = false;
-				}
-				else{
-
-					int alpha = (int) (mAlpha - x*10);
-
-					if(alpha < 0){
-						alpha = 0;
-					}
-					else if(alpha > 0xff){
-						alpha = 0xff;
-					}
-
-					mAlpha = alpha;
-
-
-					update = true;
-				}
-
-				break;
 			}
 
 
@@ -697,7 +665,6 @@ public class ColorPickerView extends View {
 
 		setUpSatValRect();
 		setUpHueRect();
-		setUpAlphaRect();
 	}
 
 	private void setUpSatValRect(){
@@ -728,21 +695,7 @@ public class ColorPickerView extends View {
 		mHueRect = new RectF(left, top, right, bottom);
 	}
 
-	private void setUpAlphaRect() {
-
-		if(!mShowAlphaPanel) return;
-
-		final RectF	dRect = mDrawingRect;
-
-		float left = dRect.left + BORDER_WIDTH_PX;
-		float top = dRect.bottom - ALPHA_PANEL_HEIGHT + BORDER_WIDTH_PX;
-		float bottom = dRect.bottom - BORDER_WIDTH_PX;
-		float right = dRect.right - BORDER_WIDTH_PX;
-
-		mAlphaRect = new RectF(left, top, right, bottom);
-
-
-	}
+	
 
 
 	/**

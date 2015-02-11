@@ -19,8 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,7 +28,7 @@ public class AppListActivity extends Fragment  {
 	ListView listview;
 
 	AppListActivity applistactivity= this;
-	ArrayList<AppListElement> appinfolist = new ArrayList();
+	ArrayList<AppListElement> appinfolist = new ArrayList<AppListElement>();
 	AppListElementsAdpater elemadapter;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +49,11 @@ public class AppListActivity extends Fragment  {
 				parent.removeView(listview);
 		}
 	}
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
 		appinfolist.clear();
 		View view=inflater.inflate(R.layout.activity_applist, container, false);
 		listview =(ListView)view.findViewById(R.id.applist);
@@ -96,16 +97,17 @@ public class AppListActivity extends Fragment  {
 				LayoutInflater vi = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = vi.inflate(R.layout.applistelementlayout, null);
 			}
+			
 			final AppListElement elem = elements.get(position);
 			if(elem!=null)
 			{
-				ImageView imageview =(ImageView) v.findViewById(R.id.imageView1);
+				ImageView imageview =(ImageView) v.findViewById(R.id.appimageview);
 				imageview.setImageDrawable(elem.getDrawable());
 				imageview.getLayoutParams().width=100;
 				imageview.getLayoutParams().height=100;
 				TextView txtview = (TextView) v.findViewById(R.id.nicktextview);
 				txtview.setText(elem.getAppname());
-				final CheckBox ckbox= (CheckBox)v.findViewById(R.id.checkBox1);
+				final CheckBox ckbox= (CheckBox)v.findViewById(R.id.appcheckbox);
 
 				ckbox.setChecked(pref.getBoolean(elem.getApppkgname(), false));
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PT3</string>
-    <string name="title_activity_main">PT3</string>
+    <string name="app_name">PT</string>
+    <string name="title_activity_main">PT</string>
     <string name="hello_world">Hello world!</string>
 
     

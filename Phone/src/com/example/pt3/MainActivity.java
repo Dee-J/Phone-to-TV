@@ -1,6 +1,6 @@
 package com.example.pt3;
 
-import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -27,6 +26,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
+		startActivity(new Intent(this,Splash.class));
+		startService(new Intent(this,GCMIntentService.class));
 		// ViewPager를 검색하고 Adapter를 달아주고, 첫 페이지를 선정해준다.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(new pagerAdapter(getSupportFragmentManager()));

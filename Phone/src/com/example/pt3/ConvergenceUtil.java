@@ -184,7 +184,7 @@ public class ConvergenceUtil {
 	 * @param msg	TV와 규약한 메시지 값 
 	 */
 	public  void sendMessage(JSONObject msg) {
-		Log.i(TAG, "sendMessage()"+msg);
+		Log.i(TAG, "sendMessage()"+msg.toString());
 		// URL 설정
             String urlStr = appURL
                     + appId + "/queue";

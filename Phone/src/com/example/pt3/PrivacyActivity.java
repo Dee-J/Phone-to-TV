@@ -23,16 +23,16 @@ public class PrivacyActivity extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+		SharedPreferences pref =getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
+		final Editor privateEditor = pref.edit();
 		RelativeLayout layout = (RelativeLayout)inflater.inflate(R.layout.activity_privacy, container, false);
 		Switch privacyswitch = (Switch)layout.findViewById(R.id.privacyswitch);
-		privacyswitch.setActivated(true);
+		privacyswitch.setActivated(pref.getBoolean("Private", false));
 		privacyswitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				SharedPreferences pref =getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
-				Editor privateEditor = pref.edit();
+				
 				if(isChecked)
 					privateEditor.putBoolean("Private", true);
 				else

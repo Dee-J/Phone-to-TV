@@ -12,6 +12,8 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.teleal.cling.android.AndroidUpnpService;
 import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.model.meta.LocalDevice;
@@ -19,6 +21,8 @@ import org.teleal.cling.model.meta.RemoteDevice;
 import org.teleal.cling.model.meta.RemoteDeviceIdentity;
 import org.teleal.cling.registry.DefaultRegistryListener;
 import org.teleal.cling.registry.Registry;
+
+import com.google.android.gcm.GCMRegistrar;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -45,11 +49,15 @@ import android.widget.Toast;
 public class BrowserActivity extends Fragment  {
 
 	private ListView listview;
-
+	private static String gcmregistedKey= null;
+	private static final String TAG = "BrowserActivity";
+	private static final String PROJECT_ID = "463009060202"; //Google Cloud Messageing Service PROJECT ID
+	private Context appContext = null;//applicationContext
 	private ArrayAdapter<DeviceDisplay> deviceListAdapter;
 	private BrowseRegistryListener registryListener = new BrowseRegistryListener();
 	private AndroidUpnpService upnpService;
 	private ConvergenceUtil mConvergenceUtil ;
+	private SharedPreferences pref =null;
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 
 		public void onServiceConnected(ComponentName className, IBinder service) {
@@ -80,6 +88,9 @@ public class BrowserActivity extends Fragment  {
 		getActivity().bindService(
 				new Intent(getActivity(), BrowserUpnpService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
+		pref =getActivity().getSharedPreferences("PT",Context.MODE_PRIVATE);
+		initialize();
+		startGCM();
 	}
 
 	@Override
@@ -89,6 +100,7 @@ public class BrowserActivity extends Fragment  {
 			ViewGroup parent = (ViewGroup)listview.getParent();
 			if(parent != null)
 				parent.removeView(listview);
+		
 		}
 	}
 	@Override
@@ -139,7 +151,11 @@ public class BrowserActivity extends Fragment  {
 	}
 
 	public void onDestroy() {
+		GCMRegistrar.onDestroy(appContext);
 		super.onDestroy();
+		
+		getActivity().unbindService(serviceConnection);
+		upnpService.getRegistry().removeListener(registryListener);
 
 
 	}
@@ -305,14 +321,23 @@ public class BrowserActivity extends Fragment  {
 
 							if (appurl == null)
 								return;
-							getActivity().unbindService(serviceConnection);
-							upnpService.getRegistry().removeListener(registryListener);
 							SharedPreferences pref = getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
 							Editor editor =pref.edit();
 							editor.putString("wifi",getWifiName(getActivity()));
 							editor.putString("appURL", appurl);
 							editor.commit();
-						}	
+							mConvergenceUtil.setIpAddress(appurl);
+							mConvergenceUtil.connect();
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							mConvergenceUtil.sendMessage(sendKey());
+						}
+
+					
 					}
 							).start();
 				} catch (ClientProtocolException e) {
@@ -341,4 +366,50 @@ public class BrowserActivity extends Fragment  {
 		}
 		return null;
 	}
+	
+	
+	private void initialize(){
+		appContext = getActivity().getApplicationContext();
+	}
+	
+	
+	private void startGCM(){
+		
+		try {
+			GCMRegistrar.checkDevice(appContext);
+		} catch (Exception e) {
+			// TODO: handle exception
+			Log.e(TAG, "This device can't use GCM");
+			return;
+		}
+
+		
+	
+		 gcmregistedKey = GCMRegistrar.getRegistrationId(appContext);
+		
+	
+		if(gcmregistedKey == null || gcmregistedKey.equals("")){
+		
+			GCMRegistrar.register(appContext, PROJECT_ID);
+			
+		}
+		Toast.makeText(appContext, "Exist Registration Id: " + gcmregistedKey, Toast.LENGTH_LONG).show();
+		Log.i("regid", gcmregistedKey);
+	}
+	
+	
+	private JSONObject sendKey() {
+		// TODO Auto-generated method stub
+		
+		try {
+			return new JSONObject().put("regID", gcmregistedKey)
+					.put("opcode", "regID")
+					.put("nickname", pref.getString("nickname", "default"))
+					.put("color", pref.getString("color", "#FFFFFF"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}	
 }

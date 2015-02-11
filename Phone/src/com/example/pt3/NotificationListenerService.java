@@ -35,7 +35,7 @@ public class NotificationListenerService extends android.service.notification.No
 		super.onDestroy();
 	}
 
-	//µî·ÏµÇ¾úÀ»¶§ ÇÏ´Â ÇÔ¼ö.
+	//ï¿½ï¿½ÏµÇ¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½.
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn)
 	{
@@ -45,7 +45,7 @@ public class NotificationListenerService extends android.service.notification.No
 		Log.d("Activated","Activated");
 		String applicationName = getAppname(sbn);
 		
-		Log.d(sbn.getPackageName(),"banned: "+pref.getBoolean(sbn.getPackageName(),false));
+		Log.d(sbn.getPackageName(),"not to banned: "+pref.getBoolean(sbn.getPackageName(),false));
 		if(pref.getBoolean(sbn.getPackageName(),false)==false&&!sbn.getPackageName().equals("com.android.phone"))return;
 		ArrayList<String> str= getText(sbn);
 		JSONObject jobj=Converter.execute(str,applicationName,sbn.getPackageName(),getApplicationContext());
