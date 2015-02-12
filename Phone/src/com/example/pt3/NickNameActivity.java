@@ -17,6 +17,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.pt3.ColorPickerView.OnColorChangedListener;
 
@@ -30,7 +31,7 @@ public class NickNameActivity extends Fragment  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
 		SharedPreferences pref = getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
@@ -40,33 +41,38 @@ public class NickNameActivity extends Fragment  {
 			editor.commit();
 		}
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-		
+
+
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-		 
-		
-		SharedPreferences pref = getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
+
+
+		final SharedPreferences pref = getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
 		final Editor editor = pref.edit();
 		RelativeLayout layout = (RelativeLayout)inflater.inflate(R.layout.activity_nickname, container, false);
 		addColorpicker(layout);
 
 		final EditText textdialog = (EditText) layout.findViewById(R.id.nickedittext);
 		textdialog.setHint(pref.getString("nickname", "default"));
-		
+
 		layout.findViewById(R.id.colorView).setBackgroundColor(Integer.parseInt(pref.getString("color", "#ffffff").substring(1),16)|0xFF000000);
 		layout.findViewById(R.id.regibutton).setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				editor.putString("nickname",textdialog.getText().toString()).commit();
+				String hexColor = String.format("#%06X", (0xFFFFFF & selectedcolor));
+
+				pref.edit().putString("color", hexColor).commit();
+				Toast.makeText(getActivity(), "닉네임과 색상이 적용됩니다.", Toast.LENGTH_LONG).show();
+
 			}
 		});;
 
-		
+
 		return layout;
 	}
 
@@ -80,25 +86,22 @@ public class NickNameActivity extends Fragment  {
 		params.setMargins(30, 69, 30, 10);
 		cpv.setLayoutParams(params);
 		cpv.setOnColorChangedListener(new OnColorChangedListener() {
-			
+
 			@Override
 			public void onColorChanged(int color) {
 				// TODO Auto-generated method stub
 				selectedcolor =color;
-				String hexColor = String.format("#%06X", (0xFFFFFF & color));
-				
-				pref.edit().putString("color", hexColor).commit();
-				
+
 				View v = getActivity().findViewById(R.id.colorView);
 				v.setBackgroundColor(color|0xFF000000);
 				v.invalidate();
 			}
 		});
-		
-	
+
+
 		layout.addView(cpv);
 	}
 
-	
-	
+
+
 }

@@ -26,8 +26,9 @@ public class NotificationListenerService extends android.service.notification.No
 	public void onCreate()
 	{
 		Log.d("NotiListener","created");
-		super.onCreate();   }
-
+		super.onCreate(); 
+		}
+	long lastcalltime=0;
 
 	@Override
 	public void onDestroy()
@@ -35,7 +36,6 @@ public class NotificationListenerService extends android.service.notification.No
 		super.onDestroy();
 	}
 
-	//��ϵǾ����� �ϴ� �Լ�.
 	@Override
 	public void onNotificationPosted(StatusBarNotification sbn)
 	{
@@ -46,7 +46,12 @@ public class NotificationListenerService extends android.service.notification.No
 		String applicationName = getAppname(sbn);
 		
 		Log.d(sbn.getPackageName(),"not to banned: "+pref.getBoolean(sbn.getPackageName(),false));
-		if(pref.getBoolean(sbn.getPackageName(),false)==false&&!sbn.getPackageName().equals("com.android.phone"))return;
+		if(pref.getBoolean(sbn.getPackageName(),false)==false)return;
+		if(sbn.getPackageName().equals("com.android.phone"))
+		{
+			lastcalltime = sbn.getPostTime();
+			 if(lastcalltime +1000>sbn.getPostTime())return;
+		}
 		ArrayList<String> str= getText(sbn);
 		JSONObject jobj=Converter.execute(str,applicationName,sbn.getPackageName(),getApplicationContext());
 		

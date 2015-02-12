@@ -68,8 +68,11 @@ public class AppListActivity extends Fragment  {
 			String appname =(String) r.loadLabel(pm);
 			Drawable drawableicon=	r.loadIcon(pm);
 			String packname =r.activityInfo.packageName;
-			appinfolist.add(new AppListElement(appname,packname,drawableicon));
-		}
+			appinfolist.add(new AppListElement(appname,
+					packname.equals("com.android.contacts")?"com.android.phone":packname
+					,drawableicon));
+	
+			}
 
 
 		((ViewGroup)listview.getParent()).removeView(listview);

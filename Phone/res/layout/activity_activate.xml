@@ -3,25 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Switch
-        android:id="@+id/activateswitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="176dp"
-        android:checked="true"
-        android:switchMinWidth="56dp"
-        android:thumbTextPadding="25dp" />
-
     <TextView
         android:id="@+id/activatetextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
-        android:text="  Activate\n       or\nDeactivate"
+        android:layout_marginTop="104dp"
+        android:text="알림을 TV로 보내실건가요?"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Switch
+        android:id="@+id/activateswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="190dp"
+        android:checked="true"
+        android:switchMinWidth="56dp"
+        android:thumbTextPadding="25dp" />
 
 </RelativeLayout>
