@@ -143,7 +143,7 @@
 		style="position: absolute; top: 90px; left: 710px; width: 500px;"
 		align="center">
 		<div id="tmpMail3">
-			<table width='420px' height="150px" border="1"
+			<table class="notiCheck" width='420px' height="150px" border="1"
 				style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
 				<tr>
 					<td id="tmpMailCk3" rowspan="4" width="20px" height="150px"
@@ -228,23 +228,27 @@
 
 	<div id="TvToPhonePanel" align="center">
 		<!-- TV to phone... 이제 마지막이다! -->
-		<table border="1"
-			style="width: 700px; margin: 0 auto; table-layout: fixed;">
+		<table class="notiPhoneTitle" border="1"
+			style="margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<th colspan="2">폰으로 알림</th>
 			</tr>
 		</table>
-		<table border="1"
-			style="width: 700px; padding: 0px; margin: 0 auto; table-layout: fixed;">
+		<table class="notiPhoneTitleSub" border="1"
+			style="padding: 0px; margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<td id="historyT" style="width: 40%;">접속 시각</td>
 				<td id="historyV" style="width: 60%;">사용자명</td>
 			</tr>
 		</table>
-		<div id="userTableDiv"
-			style="width: 700px; overflow: scroll; margin: 0 auto; padding: 0px; border: 0px;">
-			<table id="userTable" border="1"
-				style="overflow: auto; width: 700px; margin: 0px; padding: 0px; top-margin: -3px; table-layout: fixed;">
+		<div id="userTableDiv" 
+			style="overflow: hidden; margin: 0 auto; padding: 0px; border: 0px;">
+			<table id="userTable" border="1" class="notiPhoneNew"
+				style="margin: 0px; padding: 0px; top-margin: -3px; table-layout: fixed;">			
+				<tr>
+				<td id="historyT" style="width: 40%;">접속 시각</td>
+				<td id="historyV" style="width: 60%;">사용자명</td>
+			</tr>
 			</table>
 		</div>
 	</div>
@@ -271,13 +275,13 @@
 	<!-- 메일박스 끝-->
 
 	<div id="history" style="display: none;">
-		<table border="1"
+		<table border="1" class="historyTitle"
 			style="width: 1200px; margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<th colspan="3">알림 기록</th>
 			</tr>
 		</table>
-		<table border="1"
+		<table border="1" class="historyTitlesub"
 			style="z-index: 999; width: 1200px; padding: 0px; margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<td id="historyT" style="width: 15%;">수신 시간</td>
@@ -289,7 +293,7 @@
 		</table>
 		<div id="historyTableDiv"
 			style="width: 1200px; overflow: scroll; margin: 0 auto; padding: 0px; border: 0px;">
-			<table id="historyTable" border="1"
+			<table id="historyTable" border="1" class="historyNew"
 				style="overflow: auto; width: 1200px; margin: 0px; padding: 0px; top-margin: -3px; table-layout: fixed;">
 			</table>
 		</div>
@@ -385,13 +389,13 @@
 		<center style="margin-top: 100px;">
 			<a href="javascript:void(0);" id="anchor" onkeydown="Main.keyDown();">
 
-				<table border="1">
+				<table class="settingMain" border="1">
 					<tr>
 						<th colspan="2">사용자 설정 메뉴</th>
-					</tr>
+					</tr>					
 					<tr>
 						<td>알림 타입</td>
-						<td id="usr_1" style="width: 300px;"></td>
+						<td id="usr_1" style="width: 300px;">dddd</td>
 					</tr>
 					<tr>
 						<td>알림 창 크기</td>
@@ -406,7 +410,7 @@
 						<td id="usr_4"></td>
 					</tr>
 					<tr>
-						<td>알림 서비스 중지</td>
+						<td>서비스 중지</td>
 						<td id="usr_5"></td>
 					</tr>
 				</table>
