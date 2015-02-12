@@ -35,20 +35,15 @@ public class TestBroadCast extends BroadcastReceiver{
 							mConvergenceUtil.setIpAddress(pref.getString("appURL", "nullURL"));
 						else return;	
 
-						if(Rock==null){
-							Rock=new Object();
-							mConvergenceUtil.connect();
+						
+						mConvergenceUtil.connect();
 							if(200!=mConvergenceUtil.connect())
-							{
-								Rock =null;
-							}
-							try {
-								Thread.sleep(500);
+													try {
+								Thread.sleep(1000);
 							} catch (InterruptedException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-						}
 
 
 						String message = fintent.getStringExtra("message");

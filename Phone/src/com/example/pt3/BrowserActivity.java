@@ -396,8 +396,8 @@ public class BrowserActivity extends Fragment  {
 			GCMRegistrar.register(appContext, PROJECT_ID);
 			
 		}
-		Toast.makeText(appContext, "Exist Registration Id: " + gcmregistedKey, Toast.LENGTH_LONG).show();
-		Log.i("regid", gcmregistedKey);
+//		Toast.makeText(appContext, "Exist Registration Id: " + gcmregistedKey, Toast.LENGTH_LONG).show();
+//		Log.i("regid", gcmregistedKey);
 	}
 	
 	

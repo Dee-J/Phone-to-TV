@@ -1,6 +1,7 @@
 package com.example.pt3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -19,31 +20,35 @@ public class ActivateActivity extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		}
-	
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+
 		RelativeLayout layout = (RelativeLayout)inflater.inflate(R.layout.activity_activate, container, false);
-		
+
 		Switch activateswitch = (Switch)layout.findViewById(R.id.activateswitch);
-		
+		activateswitch.setChecked(getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE).getBoolean("Activate", false));
 		activateswitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				SharedPreferences pref =getActivity().getSharedPreferences("PT", Context.MODE_PRIVATE);
 				Editor activateEditor = pref.edit();
 				if(isChecked)
+				{
 					activateEditor.putBoolean("Activate", true);
-				else
+					getActivity().sendBroadcast(new Intent("com.flash.widget.ON"));
+				}else{
 					activateEditor.remove("Activate");
-				activateEditor.commit();
-				
+					activateEditor.commit();
+					getActivity().sendBroadcast(new Intent("com.flash.widget.OFF"));
+
+				}
 			}
 		});
 		return layout;
 	}
-	
-	
+
+
 }

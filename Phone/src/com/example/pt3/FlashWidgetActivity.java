@@ -1,5 +1,7 @@
 package com.example.pt3;
 
+import org.teleal.cling.support.igd.callback.GetStatusInfo;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -18,7 +20,7 @@ public class FlashWidgetActivity extends AppWidgetProvider {
 	private RemoteViews views = null;
 
 	boolean flashControl =true;
-	SharedPreferences pref;
+
 	private Intent intent;
 
 	@Override
@@ -27,7 +29,6 @@ public class FlashWidgetActivity extends AppWidgetProvider {
 
 		// TODO Auto-generated method stub
 		Log.e("Widget State","onUpdate");
-		pref = context.getSharedPreferences("PT", Context.MODE_PRIVATE);
 		flashWidget = new ComponentName(context, FlashWidgetActivity.class);
 		views = new RemoteViews(context.getPackageName(), R.layout.main);
 
@@ -84,7 +85,7 @@ public class FlashWidgetActivity extends AppWidgetProvider {
 			super.onReceive(context, intent);
 		}
 
-		pref.edit().putBoolean("Activate", flashControl).commit();
+		context.getSharedPreferences("PT", Context.MODE_PRIVATE).edit().putBoolean("Activate", flashControl).commit();
 
 	}
 }

@@ -2,6 +2,7 @@ package com.example.pt3;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,15 +22,14 @@ public class NotificationListenerService extends android.service.notification.No
 {
 
 
-
 	@Override
 	public void onCreate()
 	{
 		Log.d("NotiListener","created");
 		super.onCreate(); 
-		}
-	long lastcalltime=0;
-
+	
+	}
+	static int cnt=0;
 	@Override
 	public void onDestroy()
 	{
@@ -41,20 +41,35 @@ public class NotificationListenerService extends android.service.notification.No
 	{
 		
 		SharedPreferences pref = getSharedPreferences("PT",Context.MODE_PRIVATE);
-		if(pref.getBoolean("Activate", false)==false)return;	
-		Log.d("Activated","Activated");
+		Log.d("Activated",pref.getBoolean("Activate", false)+"");
+
+		if(!pref.getBoolean("Activate", false))return;	
 		String applicationName = getAppname(sbn);
-		
+
 		Log.d(sbn.getPackageName(),"not to banned: "+pref.getBoolean(sbn.getPackageName(),false));
 		if(pref.getBoolean(sbn.getPackageName(),false)==false)return;
 		if(sbn.getPackageName().equals("com.android.phone"))
 		{
-			lastcalltime = sbn.getPostTime();
-			 if(lastcalltime +1000>sbn.getPostTime())return;
+			if(cnt++!=0)return;
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					cnt=0;
+				}
+			}).start();
 		}
+
 		ArrayList<String> str= getText(sbn);
 		JSONObject jobj=Converter.execute(str,applicationName,sbn.getPackageName(),getApplicationContext());
-		
+
 
 		Intent i = new  Intent("com.example.pt3.TestBroadCastReceiver");
 
@@ -125,7 +140,7 @@ public class NotificationListenerService extends android.service.notification.No
 		final String applicationName = (String) (ai != null ? pm
 				.getApplicationLabel(ai) : "(unknown)");
 		return applicationName;
-		
+
 	}
 
 	////
