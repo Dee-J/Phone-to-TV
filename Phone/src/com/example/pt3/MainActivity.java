@@ -24,10 +24,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_main);
 		startActivity(new Intent(this,Splash.class));
-		startService(new Intent(this,GCMIntentService.class));
+	//	startService(new Intent(this,GCMIntentService.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		// ViewPager를 검색하고 Adapter를 달아주고, 첫 페이지를 선정해준다.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(new pagerAdapter(getSupportFragmentManager()));

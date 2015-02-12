@@ -3,25 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Switch
-        android:id="@+id/privacyswitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="176dp"
-        android:switchMinWidth="56dp"
-        
-        android:thumbTextPadding="25dp" />
-
     <TextView
         android:id="@+id/privacytextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
-        android:text="사생활 모드\n    On/Off"
+        android:layout_marginTop="95dp"
+        android:text="사생활 보호 모드 설정"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/privacytextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="사생활 보호 모드를 실행 하시면\n세부 알림은 전송되지 않습니다."
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Switch
+        android:id="@+id/privacyswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="190dp"
+        android:switchMinWidth="56dp"
+        android:thumbTextPadding="25dp" />
 
 </RelativeLayout>

@@ -60,6 +60,9 @@ public class BrowserActivity extends Fragment  {
 	private SharedPreferences pref =null;
 	private ServiceConnection serviceConnection = new ServiceConnection() {
 
+		
+	
+
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			upnpService = (AndroidUpnpService) service;
 

@@ -33,23 +33,13 @@
         android:text="등록" />
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nicktextview"
-        android:layout_marginRight="39dp"
-        android:layout_marginTop="13dp"
-        android:layout_toLeftOf="@+id/nicktextview"
-        android:text="           " />
-
-    <TextView
         android:id="@+id/nicktextview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:text="사용자"
+        android:text="    PT를 사용하시는 분의 \n이름과 색상을 입력해주세요"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -62,5 +52,15 @@
         android:lines="1"
         android:maxLines="1"
         android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nicktextview"
+        android:layout_below="@+id/nicktextview"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="23dp"
+        android:text="           " />
     
 </RelativeLayout>
