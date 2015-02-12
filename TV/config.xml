@@ -15,10 +15,11 @@
 	<type itemtype="string">user</type>
 	<srcctl itemtype="boolean">n</srcctl>
 	<ticker itemtype="boolean">Y</ticker>
+	<srcctl itemtype="boolean">n</srcctl>
 	<childlock itemtype="boolean">n</childlock>
 	<videomute itemtype="boolean">n</videomute>
 	<dcont itemtype="boolean">y</dcont>
-	<widgetname itemtype="string">tickerSampleApp</widgetname>
+	<widgetname itemtype="string">PT</widgetname>
 	<description itemtype="string"></description>
 	<width itemtype="string">1280</width>
 	<height itemtype="string">720</height>

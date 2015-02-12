@@ -20,15 +20,27 @@
 </head>
 
 <body onload="Main.onLoad();" onunload="Main.onUnload();">
-	<table width='420px' height="150px" border="1"
-		style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
-		<tr>
-			<td id="DD" rowspan="4" width="20px" height="150px"
-				style="margin: 0px; border: 0px; padding: 0px; background: #0C274C">
-				qweoiruqwioeruqowieruoiweruoeiqwur
-			</td>
-		</tr>
-	</table>
+	
+	<div id="denyCall"
+		style="position: absolute; display: none; margin: 0 auto;">
+		<table border="1"  class="settingMain2">
+			<tr>
+				<th colspan="2">알림 타입</th>
+			</tr>
+			<tr>
+				<td colspan="2" id="denyCall_1">당첨!</td>
+			</tr>
+			<tr>
+				<td colspan="2" id="denyCall_2">꽝</td>
+			</tr>
+			<tr>
+				<td colspan="2" id="denyCall_3">다음 기회에</td>
+			</tr>
+			<tr>
+				<td colspan="2" id="denyCall_4">한국 이겨라!</td>
+			</tr>
+		</table>
+	</div>
 	<div id="caption" style="position: relative; width: auto;"
 		align="center"></div>
 	<div id="cardP" style="position: relative; width: auto;" align="center"></div>
@@ -69,7 +81,7 @@
 		style="position: absolute; top: 90px; left: 590px; width: 500px; height: 150px;"
 		align="center">
 		<div id="tmpMail1">
-			<table width='420px' height="150px" border="1"
+			<table class="notiCheck" width='420px' height="150px" border="1"
 				style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
 				<tr>
 					<td id="tmpMailCk1" rowspan="4" width="20px" height="150px"
@@ -77,27 +89,27 @@
 					</td>
 					<td id="tmpMailCo1" rowspan="4" width="150px" height="150px"
 						style="margin: 0px; border: 0px; padding: 0px; background: #0C274C">
-						<img src="./images/twitter.png" width="150px" height="150px"
+						<img src="" width="150px" height="150px"
 						align="middle">
 					</td>
 					<td id="appName" width="250px" height="35px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 20px;">
-						카카오톡</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="title" width="250px" height="30px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						소멤 광보이</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="mesg" width="250px" height="64px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="nickname" width="250px" height="21px"
 						style="margin: 0px; border: 0px; padding: 0px; text-align: right; font-size: 12px">
-						최동진 / 2015.02.11 오후 10:15</td>
+						</td>
 				</tr>
 			</table>
 		</div>
@@ -106,7 +118,7 @@
 		style="position: absolute; top: 90px; left: 650px; width: 500px;"
 		align="center">
 		<div id="tmpMail2">
-			<table width='420px' height="150px" border="1"
+			<table class="notiCheck"	 width='420px' height="150px" border="1"
 				style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
 				<tr>
 					<td id="tmpMailCk2" rowspan="4" width="20px" height="150px"
@@ -114,27 +126,27 @@
 					</td>
 					<td id="tmpMailCo2" rowspan="4" width="150px" height="150px"
 						style="margin: 0px; border: 0px; padding: 0px; background: #0C274C">
-						<img src="./images/twitter.png" width="150px" height="150px"
+						<img src="" width="150px" height="150px"
 						align="middle">
 					</td>
 					<td id="appName" width="250px" height="35px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 20px;">
-						카카오톡</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="title" width="250px" height="30px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						소멤 광보이</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="mesg" width="250px" height="64px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="nickname" width="250px" height="21px"
 						style="margin: 0px; border: 0px; padding: 0px; text-align: right; font-size: 12px">
-						최동진 / 2015.02.11 오후 10:15</td>
+						</td>
 				</tr>
 			</table>
 		</div>
@@ -143,7 +155,7 @@
 		style="position: absolute; top: 90px; left: 710px; width: 500px;"
 		align="center">
 		<div id="tmpMail3">
-			<table width='420px' height="150px" border="1"
+			<table class="notiCheck" width='420px' height="150px" border="1"
 				style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
 				<tr>
 					<td id="tmpMailCk3" rowspan="4" width="20px" height="150px"
@@ -151,27 +163,27 @@
 					</td>
 					<td id="tmpMailCo3" rowspan="4" width="150px" height="150px"
 						style="margin: 0px; border: 0px; padding: 0px; background: #0C274C">
-						<img src="./images/twitter.png" width="150px" height="150px"
+						<img src="" width="150px" height="150px"
 						align="middle">
 					</td>
 					<td id="appName" width="250px" height="35px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 20px;">
-						카카오톡</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="title" width="250px" height="30px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						소멤 광보이</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="mesg" width="250px" height="64px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="nickname" width="250px" height="21px"
 						style="margin: 0px; border: 0px; padding: 0px; text-align: right; font-size: 12px">
-						최동진 / 2015.02.11 오후 10:15</td>
+						</td>
 				</tr>
 			</table>
 		</div>
@@ -180,7 +192,7 @@
 		style="position: absolute; top: 90px; left: 710px; width: 500px;"
 		align="center">
 		<div id="tmpMail4">
-			<table width='420px' height="150px" border="1"
+			<table class="notiCheck" width='420px' height="150px" border="1"
 				style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;">
 				<tr>
 					<td id="tmpMailCk4" rowspan="4" width="20px" height="150px"
@@ -188,27 +200,27 @@
 					</td>
 					<td id="tmpMailCo4" rowspan="4" width="150px" height="150px"
 						style="margin: 0px; border: 0px; padding: 0px; background: #0C274C">
-						<img src="./images/twitter.png" width="150px" height="150px"
+						<img src="" width="150px" height="150px"
 						align="middle">
 					</td>
 					<td id="appName" width="250px" height="35px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 20px;">
-						카카오톡</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="title" width="250px" height="30px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						소멤 광보이</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="mesg" width="250px" height="64px"
 						style="margin: 0px; border: 0px; padding: 0px; font-size: 15px; text-align: center;">
-						기타 알림 테스트 입니다. 아마도 여기까지가 34글자 입니다.</td>
+						</td>
 				</tr>
 				<tr>
 					<td id="nickname" width="250px" height="21px"
 						style="margin: 0px; border: 0px; padding: 0px; text-align: right; font-size: 12px">
-						최동진 / 2015.02.11 오후 10:15</td>
+						</td>
 				</tr>
 			</table>
 		</div>
@@ -228,27 +240,29 @@
 
 	<div id="TvToPhonePanel" align="center">
 		<!-- TV to phone... 이제 마지막이다! -->
-		<table border="1"
-			style="width: 700px; margin: 0 auto; table-layout: fixed;">
+		<table class="notiPhoneTitle" border="1"
+			style="margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<th colspan="2">폰으로 알림</th>
 			</tr>
 		</table>
-		<table border="1"
-			style="width: 700px; padding: 0px; margin: 0 auto; table-layout: fixed;">
+		<table class="notiPhoneTitleSub" border="1"
+			style="padding: 0px; margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<td id="historyT" style="width: 40%;">접속 시각</td>
 				<td id="historyV" style="width: 60%;">사용자명</td>
 			</tr>
 		</table>
-		<div id="userTableDiv"
-			style="width: 700px; overflow: scroll; margin: 0 auto; padding: 0px; border: 0px;">
-			<table id="userTable" border="1"
-				style="overflow: auto; width: 700px; margin: 0px; padding: 0px; top-margin: -3px; table-layout: fixed;">
+		<div id="userTableDiv" 
+			style="overflow: hidden; margin: 0 auto; padding: 0px; border: 0px;">
+			<table id="userTable" border="1" class="notiPhoneNew"
+				style="margin: 0px; padding: 0px; top-margin: -3px; table-layout: fixed;">
+			</tr>
 			</table>
 		</div>
 	</div>
 	<div id="userTableDropdown"
+		class="settingMain2"
 		style="position: absolute; display: none; margin: 0 auto; top: 100px; left: 1000px;">
 		<table border="1">
 			<tr>
@@ -271,13 +285,13 @@
 	<!-- 메일박스 끝-->
 
 	<div id="history" style="display: none;">
-		<table border="1"
+		<table border="1" class="historyTitle"
 			style="width: 1200px; margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<th colspan="3">알림 기록</th>
 			</tr>
 		</table>
-		<table border="1"
+		<table border="1" class="historyTitlesub"
 			style="z-index: 999; width: 1200px; padding: 0px; margin: 0 auto; table-layout: fixed;">
 			<tr>
 				<td id="historyT" style="width: 15%;">수신 시간</td>
@@ -287,9 +301,9 @@
 				<td id="historyI" style="width: 30%;">내용</td>
 			</tr>
 		</table>
-		<div id="historyTableDiv"
+		<div id="historyTableDiv" class="historyNew"
 			style="width: 1200px; overflow: scroll; margin: 0 auto; padding: 0px; border: 0px;">
-			<table id="historyTable" border="1"
+			<table id="historyTable" border="1" class="historyNew"
 				style="overflow: auto; width: 1200px; margin: 0px; padding: 0px; top-margin: -3px; table-layout: fixed;">
 			</table>
 		</div>
@@ -385,29 +399,39 @@
 		<center style="margin-top: 100px;">
 			<a href="javascript:void(0);" id="anchor" onkeydown="Main.keyDown();">
 
-				<table border="1">
+				<table class="settingMain" border="1">
 					<tr>
-						<th colspan="2">사용자 설정 메뉴</th>
-					</tr>
+						<th colspan="4">사용자 설정 메뉴</th>
+					</tr>					
 					<tr>
 						<td>알림 타입</td>
-						<td id="usr_1" style="width: 300px;"></td>
+						<td id="n1" style="font-size: 20px;">◀</td>
+						<td id="usr_1" style="width: 300px;">dddd</td>
+						<td id="m1" style="font-size: 20px;">▶</td>
 					</tr>
 					<tr>
 						<td>알림 창 크기</td>
+						<td id="n2" style="font-size: 20px;"></td>
 						<td id="usr_2"></td>
+						<td id="m2" style="font-size: 20px;"></td>
 					</tr>
 					<tr>
 						<td>알림 창 위치</td>
+						<td id="n3" style="font-size: 20px;"></td>
 						<td id="usr_3"></td>
+						<td id="m3" style="font-size: 20px;"></td>
 					</tr>
 					<tr>
 						<td>알림 속도</td>
+						<td id="n4" style="font-size: 20px;"></td>
 						<td id="usr_4"></td>
+						<td id="m4" style="font-size: 20px;"></td>
 					</tr>
 					<tr>
-						<td>알림 서비스 중지</td>
+						<td>서비스 중지</td>
+						<td id="n5" style="font-size: 20px;"></td>
 						<td id="usr_5"></td>
+						<td id="m5" style="font-size: 20px;"></td>
 					</tr>
 				</table>
 			</a>

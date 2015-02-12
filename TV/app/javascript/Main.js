@@ -12,9 +12,13 @@ var PL_NNAVI_STATE_BANNER_VOL = 1;
 
 window.onShow = function(e) {
 	var NNaviPlugin = caph.platform.dtv.Device.plugin('NNAVI');
-	NNaviPlugin.SetBannerState(PL_NNAVI_STATE_BANNER_VOL);
+	//NNaviPlugin.SetBannerState(PL_NNAVI_STATE_BANNER_VOL);
+	NNaviPlugin.SetBannerState(2);
 	caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.VOL_UP);
 	caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.VOL_DOWN);
+	caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.MUTE);
+	caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.CH_UP);
+	caph.platform.dtv.Device.unRegisterKey(caph.platform.Key.CH_DOWN);
 };
 
 var Main = {
@@ -55,6 +59,10 @@ Main.onLoad = function() {
 	mailInit();
 	mailHide();
 	iconInit();
+	$('html, body').css({
+	    'overflow': 'hidden',
+	    'height': '100%'
+	});
 };
 
 function mailInit() {
@@ -187,7 +195,7 @@ Usersetting.keyInit = function() {
 		notiStop = true;
 	$('#settingPanel').hide();
 	initAlertType(res[0]);
-	$('#DD').text(str);
+	//$('#DD').text(str);
 };
 
 var notiSpeed = 5;
@@ -225,14 +233,6 @@ Main.keyDown = function() {
 		break;
 	case tvKey.KEY_RETURN:
 		event.preventDefault();
-		break;
-	case 68:
-		webapis.tv.channel.tuneUp(successCB, errorCB,
-				webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
-		break;
-	case 65:
-		webapis.tv.channel.tuneDown(successCB, errorCB,
-				webapis.tv.channel.NAVIGATOR_MODE_ALL, 0);
 		break;
 	}
 };
@@ -341,7 +341,7 @@ function historyKeyDown(key) {
 		tmp += 1;
 		if (tmp == History.mesgq.length)
 			tmp = 0;
-		$('#historyTableDiv').scrollTop(tmp * 77);
+		$('#historyTableDiv').scrollTop(tmp * 39);
 		$('#perScroll_' + tmp + '1').addClass('box_shadow');
 		$('#perScroll_' + tmp + '2').addClass('box_shadow');
 		$('#perScroll_' + tmp + '3').addClass('box_shadow');
@@ -357,7 +357,7 @@ function historyKeyDown(key) {
 		if (tmp == 0)
 			tmp = History.mesgq.length;
 		tmp -= 1;
-		$('#historyTableDiv').scrollTop(tmp * 77);
+		$('#historyTableDiv').scrollTop(tmp * 39);
 		$('#perScroll_' + tmp + '1').addClass('box_shadow');
 		$('#perScroll_' + tmp + '2').addClass('box_shadow');
 		$('#perScroll_' + tmp + '3').addClass('box_shadow');
@@ -376,9 +376,60 @@ function historyKeyDown(key) {
 };
 
 var isMailShowing = false;
+var callControl = false;
+var callIdx = 0;
 
 function outterKeyDown(key) {
 	alert('outter!');
+	if(callControl){
+		switch(key){
+		case tvKey.KEY_DOWN:
+			$('#denyCall_' + callIdx).removeClass('box_shadow');
+			callIdx += 1;
+			if (callIdx == 5)
+				callIdx = 1;
+			$('#denyCall_' + callIdx).addClass('box_shadow');
+			break;
+		case tvKey.KEY_UP:
+			$('#denyCall_' + callIdx).removeClass('box_shadow');
+			callIdx -= 1;
+			if (callIdx == 0)
+				callIdx = 1;
+			$('#denyCall_' + callIdx).addClass('box_shadow');
+			alert('hell');
+			break;
+		case tvKey.KEY_ENTER:
+			var nick = $("#instantCardPAlert" + card.getPVar()).attr("nick");
+			card.animateP();
+			for(var i = 0; i < ttppQ.length; i++){
+				if(nick == ttppQ[i].nickname){
+					nick = ttppQ[i].regID;
+				}
+			}
+			requestToServer(authKey, nick, 'denyCallsmsSend', $('#denyCall_' + callIdx).text());
+		case tvKey.KEY_RETURN:
+			$("#denyCall").slideUp();
+			callControl = false;
+			break;
+		}
+		return;
+	}
+	if($("#usr_1").text() == '카드형 알림'){
+		if(card.getScreenShowCardPNum() != 0){
+			switch(key){
+			case tvKey.KEY_DOWN:
+				card.goDown();
+				break;
+			case tvKey.KEY_UP:
+				card.goUp();
+				break;
+			case tvKey.KEY_ENTER:
+				$("#denyCall").slideDown();
+				callControl = true;
+				break;
+			}
+		}
+	}
 	switch (key) {
 	case 20:
 		keyDownMaster = 'ttpp';
@@ -539,17 +590,25 @@ function userSettingKeyDown(key) {
 		switch (keyCode) {
 		case tvKey.KEY_DOWN:
 			$('#usr_' + elem).removeClass('box_shadow');
+			$('#n' + elem).removeClass('box_shadow').text('');
+			$('#m' + elem).removeClass('box_shadow').text('');
 			elem += 1;
 			if (elem == 6)
 				elem = 1;
 			$('#usr_' + elem).addClass('box_shadow');
+			$('#n' + elem).addClass('box_shadow').text('◀');
+			$('#m' + elem).addClass('box_shadow').text('▶');
 			break;
 		case tvKey.KEY_UP:
 			$('#usr_' + elem).removeClass('box_shadow');
+			$('#n' + elem).removeClass('box_shadow').text('');
+			$('#m' + elem).removeClass('box_shadow').text('');
 			elem -= 1;
 			if (elem == 0 || elem == -1)
 				elem = 5;
 			$('#usr_' + elem).addClass('box_shadow');
+			$('#n' + elem).addClass('box_shadow').text('◀');
+			$('#m' + elem).addClass('box_shadow').text('▶');;
 			break;
 		case tvKey.KEY_LEFT:
 			var subVal = Number($('#usr_' + elem).attr("idxValue"));
@@ -659,6 +718,13 @@ function initIcons() {
 function initMails() {
 	for (var i = 1; i <= mail.connectedUserCount; i++) {
 		$("#mail" + i).show();
+		$("#mail"+i+"Circle").show();
+	}
+}
+function hideMails() {
+	for (var i = 1; i <= mail.connectedUserCount; i++) {
+		$("#mail" + i).hide();
+		$("#mail"+i+"Circle").hide();
 	}
 }
 
@@ -700,7 +766,7 @@ function ttppPush(obj) {
 		if (userList[i] == obj.nickname)
 			return;
 	}
-	$('#DD').text(obj.regID);
+	//$('#DD').text(obj.regID);
 	userList.push(obj.nickname);
 	ttppQ.push(obj);
 	var result = '';
@@ -785,9 +851,9 @@ var Convergence = {
 				+ jsonObj.nickname + '|' + jsonObj.title.substr(0, 10) + '|'
 				+ jsonObj.mesg.substr(0, 11));
 		if (History.mesgq.length > 5)
-			$('#historyTableDiv').css("height", 77 * (5 + 1));
+			$('#historyTableDiv').css("height", 39 * (5 + 1));
 		else
-			$('#historyTableDiv').css("height", 77 * (History.mesgq.length));
+			$('#historyTableDiv').css("height", 39 * (History.mesgq.length));
 		if (History.mesgq.length > 40)
 			History.mesgq.shift();
 		var su = '';
@@ -841,7 +907,7 @@ function MailManager() {
 	this.connectedUserCount = 0;
 	this.mailBox = new Array();
 	this.mailTempIdx = 0;
-	for (var i = 0; i < 4; i++) {
+	for (var i = 0; i < 5; i++) {
 		this.mailBox[i] = new Array();
 	}
 
@@ -873,7 +939,11 @@ function MailManager() {
 					+ this.mailBox[this.connectedUserList[obj.nickname]].length
 					+ "Circle");
 		}
-	}
+		if($('#usr_1').text() != '메일함형 알림'){
+			hideMails();
+			return;
+		}
+	};
 	this.push = function(obj) {
 		if (this.connectedUserList[obj.nickname] == null) {
 			if (this.connectedUserCount == 5) {
@@ -919,11 +989,11 @@ function MailManager() {
 				.css('height', 100)
 				.css('opacity', 0)
 				.html(
-						'<div id="mailNoti" class="non_box_shadow2"><table width="420px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+						'<div id="mailNoti" class="non_box_shadow2"><table class="notiCheck" width="420px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
 								+ '"></td><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/twitter.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
 								+ obj.opcode
 								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
 								+ obj.title
@@ -939,7 +1009,7 @@ function MailManager() {
 		this.mailTempIdx += 1;
 		$("#mail" + userNo + "Circle").text(this.mailBox[userNo].length);
 		if (mail.mailBox[userNo].length != 0) {
-			setTimeout(this.r, 3000);
+			setTimeout(this.r, notiSpeed * 1000);
 			setTimeout(function() {
 				dummy.animate({
 					opacity : 0
@@ -976,11 +1046,11 @@ function MailManager() {
 				.css('height', 100)
 				.css('opacity', 0)
 				.html(
-						'<div id="mailNoti" class="non_box_shadow2"><table width="420px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+						'<div id="mailNoti" class="non_box_shadow2"><table class="notiCheck"  width="420px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="color" rowspan="4" width="20px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
 								+ '"></td><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/twitter.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
 								+ obj.opcode
 								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
 								+ obj.title
@@ -1003,7 +1073,7 @@ function MailManager() {
 			});
 		}, notiSpeed * 1000);
 		if (mail.mailBox[userNo].length != 0) {
-			setTimeout(mail.r, 3000);
+			setTimeout(mail.r, notiSpeed * 1000);
 			setTimeout(function() {
 				initMails();
 			}, notiSpeed * 1000);
@@ -1067,8 +1137,10 @@ function IconManager() {
 	this.push = function(obj) {
 		switch (obj.opcode) {
 		case '전화':
+			this.pushCall(obj);
 			break;
 		case '문자':
+			this.pushSms(obj);
 			break;
 		default:
 			this.pushNoti(obj);
@@ -1091,9 +1163,9 @@ function IconManager() {
 				.append(
 						'<div id="iconNoti'
 								+ iconNotiIdx
-								+ '"><table width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+								+ '"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/line.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
 								+ obj.opcode
 								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
 								+ obj.title
@@ -1104,12 +1176,94 @@ function IconManager() {
 								+ '</td></tr></table></div>');
 		$("#icon3Circle").show().text(this.notiNum);
 		iconNotiIdx++;
+	};this.pushSms = function(obj) {
+		// 그려줘야함...
+		this.notiNum += 1;
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":"
+				+ dt.getSeconds();
+		$('#iconInner2')
+				.append(
+						'<div id="iconSms'
+								+ iconNotiIdx
+								+ '"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+								+ obj.color
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ obj.opcode
+								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
+								+ obj.title
+								+ '</td></tr><tr><td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
+								+ obj.mesg.substr(0, 32)
+								+ '</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'
+								+ obj.nickname + ' / ' + time
+								+ '</td></tr></table></div>');
+		$("#icon2Circle").show().text(this.notiNum);
+		iconNotiIdx++;
+	};this.pushCall = function(obj) {
+		// 그려줘야함...
+		this.notiNum += 1;
+		var dt = new Date();
+		var time = dt.getHours() + ":" + dt.getMinutes() + ":"
+				+ dt.getSeconds();
+		$('#iconInner1')
+				.append(
+						'<div id="iconCall'
+								+ iconNotiIdx
+								+ '"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+								+ obj.color
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ obj.opcode
+								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
+								+ obj.title
+								+ '</td></tr><tr><td id="mesg" width="250px" height="64px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
+								+ obj.mesg.substr(0, 32)
+								+ '</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'
+								+ obj.nickname + ' / ' + time
+								+ '</td></tr></table></div>');
+		$("#icon1Circle").show().text(this.notiNum);
+		iconNotiIdx++;
 	};
-}
+}	
 var iconNotiIdx = 0;
 var iconNotiIdxQ = 0;
 
 var card = new CardManager();
+
+function getIcon(name){
+	var path = './images/';
+	switch(name){
+	case '전화':
+		return path + 'call.png';
+	case '부재중':
+		return path + 'missingcall.png';
+	case '메신저':
+		return path + 'facebookmsg.png';
+	case '카카오톡':
+		return path + 'kakao.png';
+	case 'Facebook':
+		return path + 'facebook.png';
+	case '메시지':
+		return path + 'sms.png';
+	case 'Twitter':
+		return path + 'twitter.png';
+	case '라인':
+		return path + 'line.png';
+	case 'Gmail':
+		return path + 'email.png';
+	case '행아웃':
+		return path + 'hangout.png';
+	case '네이버':
+		return path + 'naver.png';
+	case '일정':
+		return path + 'calender.png';
+	case '싸이월드':
+		return path + 'cyworld.png';
+	case '배터리 부족':
+		return path + 'lowbat.png';
+	default:
+		return path + 'default.png';
+	}
+}
 
 /* 클래스 선언 */
 function CardManager() {
@@ -1125,35 +1279,109 @@ function CardManager() {
 	var screenShowCardPArray = new Array();
 	var cardPVarDelete = 0;
 	var cardPIndex = 0;
+	var pSelectIdx = -1;
+	var mtop = 0;
+	var setTimeoutArray = new Array();
 	
 	/* public 메서드 */
 	this.push_back = function(obj) {
-		if(obj.opcode == '전화'){
+		if(obj.opcode == '전화' && obj.title != '부재중 전화'){
 			//예외처리
 			drawPhone(obj);
 			return;
+		}else if(obj.title == '부재중 전화')
+		{
+			deleteP(obj);
 		}
 		if (screenShowCardNum == 3)
 			readyQueue.push(obj);
 		else
 			drawAppend(obj);
 	};
+	
+	this.getScreenShowCardPNum = function(){
+		return screenShowCardPNum;
+	};
+
+	this.goDown = function(){
+		alert(pSelectIdx);
+		$("#instantCardPAlert" + pSelectIdx).removeClass('box_shadow2');
+		$("#instantCardPAlert" + pSelectIdx).addClass('non_box_shadow2');
+		pSelectIdx += 1;
+		if(pSelectIdx > cardPIndex-1)
+			pSelectIdx = cardPVarDelete;
+		alert(pSelectIdx);
+		$("#instantCardPAlert" + pSelectIdx).addClass('box_shadow2');
+		$("#instantCardPAlert" + pSelectIdx).removeClass('non_box_shadow2');
+	};
+	this.goUp = function(){
+		if(pSelectIdx == -1){
+			pSelectIdx = cardPVarDelete;
+			return;
+		}
+		
+		if(pSelectIdx < cardPVarDelete-1)
+			pSelectIdx = cardPVarDelete;
+		
+		$("#instantCardPAlert" + pSelectIdx).removeClass('box_shadow2');
+		$("#instantCardPAlert" + pSelectIdx).addClass('non_box_shadow2');
+		pSelectIdx -= 1;
+		if(pSelectIdx < cardPVarDelete-1)
+			pSelectIdx = cardPIndex;
+		$("#instantCardPAlert" + pSelectIdx).addClass('box_shadow2');
+		$("#instantCardPAlert" + pSelectIdx).removeClass('non_box_shadow2');
+	};
+	
+	this.getPVar = function(){
+		return pSelectIdx;
+	};
+	
+	this.getCardPIndex = function(){
+		return cardPIndex;
+	};
+	
+	this.animateP = function(){
+		screenShowCardPNum -= 1;
+		for(var i = pSelectIdx; i < cardPIndex; i++){
+			$("#instantCardPAlert" + i).animate({
+				"top" : "-=160px"
+			}, 200, "linear");
+		}
+		mtop -= 160;
+		$("#instantCardPAlert" + pSelectIdx).remove();
+		clearTimeout(setTimeoutArray[pSelectIdx]);
+	};
 
 	/* private 메서드 */
+	var deleteP = function(obj){
+		mtop -= 160;
+		for(var i = cardPVarDelete; i <= cardPIndex; i++){
+			if(obj.nickname == $('#instantCardPAlert' + i).attr('nick')){
+				for(var j = i; j < cardPIndex; j++){
+					$("#instantCardPAlert" + j).animate({
+						"top" : "-=160px"
+					}, 200, "linear");
+				}
+				screenShowCardPNum -= 1;
+				$("#instantCardPAlert" + i).remove();
+				clearTimeout(setTimeoutArray[i]);
+				break;
+			}
+		}
+	};
 	var drawAppend = function(obj) {
-		var top = 0;
 		// 그려줘야함...
 		var dt = new Date();
 		var time = dt.getHours() + ":" + dt.getMinutes() + ":"
 				+ dt.getSeconds();
 		$('#card').append(
 				"<div id=\"instantCardAlert" + cardIndex
-						+ "\" style=\"position: absolute;\"></div>");
+						+ "\" class ='non_box_shadow2' style=\"position: absolute;\"></div>");
 		$("#instantCardAlert" + cardIndex)
 				.html(
-						'<div id="cardNoti"><table width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+						'<div id="cardNoti"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/line.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
 								+ obj.opcode
 								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
 								+ obj.title
@@ -1164,7 +1392,7 @@ function CardManager() {
 								+ ' / '
 								+ time
 								+ '</td></tr></table></div>').css("left", 800)
-				.css("top", (top + screenShowCardNum * 160)).css("height", 50);
+				.css("top", (mtop + screenShowCardNum * 160)).css("height", 50);
 		setTimeout(function() {
 			dequeue();
 		}, notiSpeed * 1000);
@@ -1180,12 +1408,12 @@ function CardManager() {
 				+ dt.getSeconds();
 		$('#cardP').append(
 				"<div id=\"instantCardPAlert" + cardPIndex
-						+ "\" style=\"position: absolute;\"></div>");
+						+ "\" class ='non_box_shadow2' style=\"position: absolute;\"></div>");
 		$("#instantCardPAlert" + cardPIndex)
 				.html(
-						'<div id="cardNoti"><table width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
+						'<div id="cardNoti"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/line.png" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
 								+ obj.opcode
 								+ '</td></tr><tr><td id="title" width="250px" height="30px" style="margin: 0px; border: 0px; padding: 0px; font-size:15px;text-align:center;">'
 								+ obj.title
@@ -1196,33 +1424,29 @@ function CardManager() {
 								+ ' / '
 								+ time
 								+ '</td></tr></table></div>').css("left", 800)
-				.css("top", (top + screenShowCardPNum * 160)).css("height", 50);
-		
+				.css("top", (top + screenShowCardPNum * 160)).css("height", 160).attr("nick", obj.nickname);
+		mtop += 160;
 		for (var i = 0; i < screenShowCardArray.length; i++) {
 			screenShowCardArray[i].animate({
-				"top" : "-=160px"
+				"top" : "+=160px"
 			}, 200, "linear");
 		}
-		setTimeout(function() {
+		setTimeoutArray[cardPIndex] = setTimeout(function() {
 			dequeueP();
-			for (var i = 0; i < screenShowCardArray.length; i++) {
-				screenShowCardArray[i].animate({
-					"top" : "+=160px"
-				}, 200, "linear");
-			}
-		}, 60*1000);
+		}, 60000);
 		screenShowCardPArray.push($('#instantCardPAlert' + cardPIndex));
 		screenShowCardPNum += 1;
 		cardPIndex += 1;
 	};
 	
 	var dequeueP = function() {
+		mtop -= 160;
 		alert('for Delete : ' + cardPVarDelete);
-		$("#instantCardAlert" + cardPVarDelete).animate({
+		$("#instantCardPAlert" + cardPVarDelete).animate({
 			opacity : 0
 		}, 200);
 		setTimeout(function() {
-			$("#instantCardAlert" + cardPVarDelete++).remove();
+			$("#instantCardPAlert" + cardPVarDelete++).remove();
 		}, 300);
 		screenShowCardPArray.shift();
 		for (var i = 0; i < screenShowCardArray.length; i++) {
@@ -1292,9 +1516,9 @@ function makeCaption(obj) {
 						+ "\" style=\"position: absolute;\"></div>");
 		$("#instantCaptionAlert" + captionVar)
 				.html(
-						'<table width="1280" height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:'
+						'<table class="notiCheck"  width="1280" height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/kakao.png" width="100px" height="100px" align="middle"></td><td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="100px" height="100px" align="middle"></td><td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">'
 								+ obj.title
 								+ '</td><td id="mesg" width="980px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">'
 								+ obj.mesg
@@ -1325,9 +1549,9 @@ function makeCaption(obj) {
 				+ dt.getSeconds();
 		$("#instantCaptionAlert" + captionVar)
 				.html(
-						'<table width="1280" height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:'
+						'<table class="notiCheck"  width="1280" height="100px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="2" width="100px" height="100px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
-								+ '"><img src="./images/kakao.png" width="100px" height="100px" align="middle"></td><td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">'
+								+ '"><img src="'+getIcon(obj.opcode)+'" width="100px" height="100px" align="middle"></td><td id="title" rowspan="2" width="200px" height="80px" style="margin : 0px; border: 0px; padding: 0px; font-size:25px;">'
 								+ obj.title
 								+ '</td><td id="mesg" width="980px" height="80px" style="margin : 0px; border: 0px; padding: 0px;">'
 								+ obj.mesg
@@ -1348,6 +1572,7 @@ function makeCaption(obj) {
 function requestToServer(authKey, regID, opcode, dummy) {
 	var formData = "auth=" + authKey + '&opcode=' + opcode + '&smsNo=' + dummy
 			+ '&regID=' + regID; // Name value Pair
+	alert(formData);
 	$.ajax({
 		url : "http://210.118.74.55:18080/PT_GCMServer/sendMessage",
 		type : "POST",
@@ -1413,7 +1638,7 @@ function authKeyIssue() {
 					notiStop = false;
 				write(res);
 				alert('res : '+res);
-				$('#DD').text(authKey);
+				//$('#DD').text(authKey);
 			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
