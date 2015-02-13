@@ -33,11 +33,7 @@ body, table, div, p{
 
 
 .settingMain{	
-<<<<<<< HEAD
 	width:600px;
-=======
-	width:500px;
->>>>>>> bdd38d66dce8cfc3b3de3560a3a7911658445ae7
 	min-width:500px;
 	border-collapse:collapse;  	
 	color:#6b6b6b;
@@ -57,10 +53,6 @@ body, table, div, p{
 }
 .settingMain td{	
 	box-sizing:border-box;
-<<<<<<< HEAD
-=======
-	padding-left:30px;
->>>>>>> bdd38d66dce8cfc3b3de3560a3a7911658445ae7
 	text-align: center;
 }
 .settingMain td:first-child {
@@ -73,7 +65,6 @@ body, table, div, p{
     font-size:25px;
     border:0px solid;
 	border-bottom:1px solid #e0e0e0;
-<<<<<<< HEAD
 	width: 200px;
 }
 .settingMain2{	
@@ -99,8 +90,6 @@ body, table, div, p{
 	box-sizing:border-box;
 	width: 200px;
 	text-align: center;
-=======
->>>>>>> bdd38d66dce8cfc3b3de3560a3a7911658445ae7
 }
 
 .notiPhoneTitle{
@@ -138,7 +127,6 @@ body, table, div, p{
 }
 .notiPhoneNew td:first-child {
 	border-right:1px solid #e0e0e0;
-<<<<<<< HEAD
 }
 
 .historyTitle{
@@ -187,37 +175,3 @@ body, table, div, p{
 	margin: 5px;
 	padding: 0px;
 }
-=======
-}
-
-.historyTitle{
-	font-size:30px;
-	height:70px;  	
-	background:#418a95;  
-	border-bottom:1px solid #e0e0e0;
-	font-weight:bold;
-	width:500px;	
-	border-bottom:1px solid #e0e0e0;
-	color:#f6f3f7; 
-}
-.historyTitlesub{
-	text-align: center;
-	padding-left:20px;
-	border-left: 0;
-	height:30px;
-    background:#63ACB7;
-    color:#f6f3f7; 
-    font-size:20px;
-    border:0px solid;
-	border-bottom:1px solid #e0e0e0;
-	width:500px;	
-}
-.historyNew{
-	text-align: center;
-	color:#6b6b6b;	
-	box-sizing:border-box;
-	padding-left:30px;	
-	border-bottom:1px solid #e0e0e0;
-	width:500px;
-}
->>>>>>> bdd38d66dce8cfc3b3de3560a3a7911658445ae7

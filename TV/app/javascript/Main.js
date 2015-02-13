@@ -386,7 +386,7 @@ function outterKeyDown(key) {
 		case tvKey.KEY_DOWN:
 			$('#denyCall_' + callIdx).removeClass('box_shadow');
 			callIdx += 1;
-			if (callIdx == 5)
+			if (callIdx == 2)
 				callIdx = 1;
 			$('#denyCall_' + callIdx).addClass('box_shadow');
 			break;
@@ -541,8 +541,18 @@ function iconKeyDown(key) {
 			$('#icon' + iconIndex).addClass('box_shadow2');
 			break;
 		case tvKey.KEY_ENTER:
-			if (icon.notiNum != 0) {
+			alert(icon.notiNum);
+			if (icon.notiNum != 0 && iconIndex == 3) {
 				iconIsMenuIn = 1;
+				icon.notiNum = 0;
+				showIconMenu();
+			}else if (icon.smsNum != 0 && iconIndex == 2) {
+				iconIsMenuIn = 1;
+				icon.smsNum = 0;
+				showIconMenu();
+			}else if (icon.callNum != 0 && iconIndex == 1) {
+				iconIsMenuIn = 1;
+				icon.callNum = 0;
 				showIconMenu();
 			}
 			break;
@@ -559,18 +569,56 @@ function iconKeyDown(key) {
 var iconTmp = 0;
 
 function showIconRecursive() {
-	iconTmp = iconNotiIdxQ;
-	$("#iconNoti" + iconTmp).animate({
+	var t;
+	alert('icon!!!@#$!@#' + iconIndex);
+	switch(iconIndex){
+	case 1:
+		iconTmp =iconCallIdxQ;
+		iconCallIdxQ += 1;
+		t = "#iconCall";
+		break;
+	case 2:
+		iconTmp =iconSMSIdxQ;
+		iconSMSIdxQ += 1;
+		t = "#iconSms";
+		break;
+	default:
+		iconTmp = iconNotiIdxQ;
+		iconNotiIdxQ += 1;
+		t = "#iconNoti";
+		break;
+	}
+	
+	$(t + iconTmp).animate({
 		opacity : 0
 	}, 200, function() {
-		$("#iconNoti" + iconTmp).remove();
+		$(t + iconTmp).remove();
 	});
-	iconNotiIdxQ += 1;
-	if (iconNotiIdxQ != iconNotiIdx)
-		setTimeout(showIconRecursive, notiSpeed * 1000);
-	else {
-		iconIsMenuIn = 0;
-		hideIconMenu();
+	switch(iconIndex){
+	case 1:
+		if (iconCallIdxQ != iconCallIdx)
+			setTimeout(showIconRecursive, notiSpeed * 1000);
+		else {
+			iconIsMenuIn = 0;
+			hideIconMenu();
+		}
+		break;
+	case 2:
+		if (iconSMSIdxQ != iconSMSIdx)
+			setTimeout(showIconRecursive, notiSpeed * 1000);
+		else {
+			iconIsMenuIn = 0;
+			hideIconMenu();
+		}
+		break;
+	default:
+		if (iconNotiIdxQ != iconNotiIdx)
+			setTimeout(showIconRecursive, notiSpeed * 1000);
+		else {
+			iconIsMenuIn = 0;
+			hideIconMenu();
+		}
+		break;
 	}
 }
 
@@ -1130,8 +1178,8 @@ function IconManager() {
 
 	this.notiNum = 0;
 	/* private 변수 */
-	var callNum = 0;
-	var smsNum = 0;
+	this.callNum = 0;
+	this.smsNum = 0;
 
 	/* public 메서드 */
 	this.push = function(obj) {
@@ -1139,7 +1187,7 @@ function IconManager() {
 		case '전화':
 			this.pushCall(obj);
 			break;
-		case '문자':
+		case '메시지':
 			this.pushSms(obj);
 			break;
 		default:
@@ -1178,14 +1226,14 @@ function IconManager() {
 		iconNotiIdx++;
 	};this.pushSms = function(obj) {
 		// 그려줘야함...
-		this.notiNum += 1;
+		this.smsNum += 1;
 		var dt = new Date();
 		var time = dt.getHours() + ":" + dt.getMinutes() + ":"
 				+ dt.getSeconds();
 		$('#iconInner2')
 				.append(
 						'<div id="iconSms'
-								+ iconNotiIdx
+								+ iconSMSIdx
 								+ '"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
 								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
@@ -1197,18 +1245,18 @@ function IconManager() {
 								+ '</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'
 								+ obj.nickname + ' / ' + time
 								+ '</td></tr></table></div>');
-		$("#icon2Circle").show().text(this.notiNum);
-		iconNotiIdx++;
+		$("#icon2Circle").show().text(this.smsNum);
+		iconSMSIdx++;
 	};this.pushCall = function(obj) {
 		// 그려줘야함...
-		this.notiNum += 1;
+		this.callNum += 1;
 		var dt = new Date();
 		var time = dt.getHours() + ":" + dt.getMinutes() + ":"
 				+ dt.getSeconds();
 		$('#iconInner1')
 				.append(
 						'<div id="iconCall'
-								+ iconNotiIdx
+								+ iconCallIdx
 								+ '"><table class="notiCheck"  width="400px" height="150px" border="1" style="margin: 0px; border: 0px; padding: 0px; opacity: 0.8;"><tr><td id="opcode" rowspan="4" width="150px" height="150px" style="margin: 0px; border: 0px; padding: 0px; background:'
 								+ obj.color
 								+ '"><img src="'+getIcon(obj.opcode)+'" width="150px" height="150px" align="middle"></td><td id="appName" width="250px" height="35px" style="margin: 0px; border: 0px; padding: 0px; font-size:20px;">'
@@ -1220,12 +1268,16 @@ function IconManager() {
 								+ '</td></tr><tr><td id="nickname" width="250px" height="21px" style="margin: 0px; border: 0px; padding: 0px; text-align:right; font-size:12px">'
 								+ obj.nickname + ' / ' + time
 								+ '</td></tr></table></div>');
-		$("#icon1Circle").show().text(this.notiNum);
-		iconNotiIdx++;
+		$("#icon1Circle").show().text(this.callNum);
+		iconCallIdx++;
 	};
 }	
 var iconNotiIdx = 0;
 var iconNotiIdxQ = 0;
+var iconSMSIdx = 0;
+var iconSMSIdxQ = 0;
+var iconCallIdx = 0;
+var iconCallIdxQ = 0;
 
 var card = new CardManager();
 
