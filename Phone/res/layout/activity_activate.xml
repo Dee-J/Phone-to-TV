@@ -20,7 +20,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="190dp"
-        android:checked="true"
         android:switchMinWidth="56dp"
         android:thumbTextPadding="25dp" />
 
